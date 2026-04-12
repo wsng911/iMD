@@ -1,14 +1,39 @@
 <template>
   <div class="layout">
+    <!-- 第1页：文件树 -->
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
-      :class="{ 'mobile-page-hidden': mobilePage === 'main' }"
-      @select="selectDoc" @toggle="sidebarCollapsed = !sidebarCollapsed"
+      :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
+      @select="onMobileSelect" @toggle="sidebarCollapsed = !sidebarCollapsed"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
       @jump="scrollTo" @import="importMd" @export="exportMd"
     />
-    <main class="main" :class="{ 'mobile-page-hidden': mobilePage === 'sidebar' }">
+
+    <!-- 第2页：大纲（仅手机端） -->
+    <div class="mobile-outline-page mobile-page-hidden" :class="{ 'mobile-page-show': mobilePage === 'outline' }">
+      <div class="topbar">
+        <button class="mobile-back-btn tb-btn" @click="goBack" style="flex-shrink:0;margin-right:4px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span class="doc-title">{{ current?.title || '' }}</span>
+      </div>
+      <div class="mobile-outline-list">
+        <div v-if="!headings.length" class="outline-empty" style="padding:24px;color:var(--text3)">无大纲，直接阅读</div>
+        <div v-for="h in headings" :key="h.id"
+          :class="['mobile-outline-item', `lv${h.level}`]"
+          @click="onOutlineClick(h)">
+          {{ h.text }}
+        </div>
+        <div class="mobile-outline-read" @click="goMain">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          直接阅读全文
+        </div>
+      </div>
+    </div>
+
+    <!-- 第3页：内容 -->
+    <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <div class="topbar">
         <button class="mobile-back-btn tb-btn" @click="goBack" style="flex-shrink:0;margin-right:4px">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
@@ -66,19 +91,20 @@ const sidebarCollapsed = ref(false)
 const showPwd = ref(false)
 const pwd = ref({ old: '', new1: '', new2: '' })
 const pwdMsg = ref(null)
-const mobilePage = ref('sidebar')
+const mobilePage = ref('sidebar') // sidebar | outline | main
 
-// history 回退支持
-function pushMainPage() {
-  history.pushState({ page: 'main' }, '')
+function pushPage(page) {
+  history.pushState({ page }, '')
+  mobilePage.value = page
 }
-function goBack() {
-  if (history.state?.page === 'main') history.back()
-  else mobilePage.value = 'sidebar'
+function goBack() { history.back() }
+function goMain() { pushPage('main') }
+
+function onPopState() {
+  const page = history.state?.page || 'sidebar'
+  mobilePage.value = page
 }
-function onPopState(e) {
-  mobilePage.value = 'sidebar'
-}
+
 onMounted(async () => {
   window.addEventListener('popstate', onPopState)
   loadSettings()
@@ -93,12 +119,18 @@ onMounted(async () => {
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
-function selectDoc(doc) {
+// 手机端点文档 → 进大纲页；桌面端直接进内容
+function onMobileSelect(doc) {
   current.value = doc
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
-  mobilePage.value = 'main'
-  pushMainPage()
+  pushPage('outline')
+}
+
+function onOutlineClick(h) {
+  pushPage('main')
+  // 等内容页渲染后跳转
+  setTimeout(() => scrollTo(h.id), 100)
 }
 
 const headings = computed(() => {
