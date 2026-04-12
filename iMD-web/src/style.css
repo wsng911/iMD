@@ -199,8 +199,6 @@ body.dark { background: var(--bg); }
 .md-wrap { flex: 1; overflow-y: auto; }
 .md-wrap p, .md-wrap li { cursor: pointer; }
 .md-wrap pre { cursor: pointer; }
-.md-wrap .md-editor-preview-wrapper,
-.md-wrap .md-editor-preview,
 /* 隐藏代码块语言标签 */
 .md-wrap .code-block__lang,
 .md-wrap [class*="language-"]::before,
