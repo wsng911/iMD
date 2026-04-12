@@ -102,6 +102,7 @@ function goBack() { history.back() }
 function goMain() { pushPage('main') }
 
 function onPopState() {
+  if (window.innerWidth > 768) return
   const page = history.state?.page || 'sidebar'
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
@@ -129,7 +130,8 @@ function onMobileSelect(doc) {
   current.value = doc
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
-  pushPage('outline')
+  // 手机端才走多页逻辑（CSS 媒体查询 768px）
+  if (window.innerWidth <= 768) pushPage('outline')
 }
 
 function onOutlineClick(h) {
