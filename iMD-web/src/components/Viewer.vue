@@ -103,7 +103,6 @@ function fallbackCopy(text, cb) {
   try { document.execCommand('copy'); cb?.() } catch {}
   document.body.removeChild(ta)
 }
-}
 
 function handleClick(e) {
   const a = e.target.closest('a')
