@@ -1,7 +1,8 @@
 <template>
   <div class="layout">
+    <div class="sidebar-overlay" @click="sidebarCollapsed = true"></div>
     <Sidebar
-      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
+      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :class="{ open: !sidebarCollapsed }" :outlineTree="outlineTree" :headings="headings"
       @select="selectDoc" @toggle="sidebarCollapsed = !sidebarCollapsed"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"

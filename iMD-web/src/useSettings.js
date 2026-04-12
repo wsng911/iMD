@@ -7,7 +7,7 @@ const DEFAULTS = {
 }
 
 // 后端接入
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const BASE = import.meta.env.VITE_API_URL || ''
 function authHeaders() {
   const token = localStorage.getItem('imk_token')
   return { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }
