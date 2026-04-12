@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <div class="sidebar-overlay" @click="sidebarCollapsed = true"></div>
+    <div class="sidebar-overlay" v-show="isMobile && !sidebarCollapsed" @click="sidebarCollapsed = true"></div>
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :class="{ open: !sidebarCollapsed }" :outlineTree="outlineTree" :headings="headings"
       @select="selectDoc" @toggle="sidebarCollapsed = !sidebarCollapsed"
@@ -86,12 +86,14 @@ const current = ref(null)
 const mode = ref('view')
 const outlineHeight = ref(parseInt(localStorage.getItem('imk_outline_h')) || 300)
 const activeOutline = ref(null)
-const sidebarCollapsed = ref(false)
+const isMobile = ref(window.innerWidth <= 768)
+window.addEventListener('resize', () => { isMobile.value = window.innerWidth <= 768 })
+const sidebarCollapsed = ref(isMobile.value)
 const showPwd = ref(false)
 const pwd = ref({ old: '', new1: '', new2: '' })
 const pwdMsg = ref(null)
 
-function selectDoc(doc) { current.value = doc; mode.value = 'view'; localStorage.setItem('imk_last_doc', doc.id) }
+function selectDoc(doc) { current.value = doc; mode.value = 'view'; localStorage.setItem('imk_last_doc', doc.id); if (isMobile.value) sidebarCollapsed.value = true }
 
 const headings = computed(() => {
   if (!current.value?.content) return []
