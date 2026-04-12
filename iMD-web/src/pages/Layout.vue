@@ -59,14 +59,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import JSZip from 'jszip'
+import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
 import Viewer from '../components/Viewer.vue'
 import Editor from '../components/Editor.vue'
-import OutlineNode from '../components/OutlineNode.vue'
 import { settings, loadSettings, persistSettings } from '../useSettings.js'
 import { api } from '../api.js'
+
+const router = useRouter()
 
 onMounted(async () => {
   loadSettings()
@@ -87,7 +89,9 @@ const mode = ref('view')
 const outlineHeight = ref(parseInt(localStorage.getItem('imk_outline_h')) || 300)
 const activeOutline = ref(null)
 const isMobile = ref(window.innerWidth <= 768)
-window.addEventListener('resize', () => { isMobile.value = window.innerWidth <= 768 })
+const onResize = () => { isMobile.value = window.innerWidth <= 768 }
+window.addEventListener('resize', onResize)
+onUnmounted(() => window.removeEventListener('resize', onResize))
 const sidebarCollapsed = ref(isMobile.value)
 const showPwd = ref(false)
 const pwd = ref({ old: '', new1: '', new2: '' })
