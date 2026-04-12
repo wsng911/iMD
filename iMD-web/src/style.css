@@ -244,21 +244,19 @@ body.dark { background: var(--bg); }
 
 /* 移动端优化 */
 @media (max-width: 768px) {
-  .layout { flex-direction: column; width: 100%; max-width: 100%; margin: 0; box-shadow: none; }
+  .layout { flex-direction: column; width: 100% !important; max-width: 100% !important; margin: 0 !important; box-shadow: none; }
   .sidebar { width: 100% !important; height: auto; max-height: 40vh; box-shadow: none; border-bottom: 1px solid var(--border); }
-  .sidebar.collapsed { height: 0; overflow: hidden; border: none; }
+  .sidebar.collapsed { width: 100% !important; height: 0 !important; overflow: hidden !important; border: none; }
   .sidebar.collapsed .sidebar-header { position: fixed; top: 8px; left: 8px; z-index: 200; background: transparent; border: none; padding: 0; min-height: unset; }
   .sidebar-middle { max-height: 30vh; }
   .outline-zone, .private-zone { max-height: 20vh; }
   main { width: 100%; }
   .viewer { padding: 16px 20px; }
-  .viewer-toolbar { flex-wrap: wrap; gap: 6px; }
   .topbar { padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
   .sidebar { max-height: 35vh; }
   .viewer { padding: 12px 16px; }
-  .md-editor-preview { font-size: 14px; }
   .group-title, .item { padding: 6px 10px; font-size: 14px; }
 }

@@ -50,23 +50,27 @@ function getEl(e) {
       const range = document.caretRangeFromPoint(e.clientX, e.clientY)
       if (range) {
         const node = range.startContainer
-        const text = node.textContent || ''
-        // 计算该 node 在整个 code.innerText 中的偏移
         const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT)
         let offset = 0
         let found = false
         while (walker.nextNode()) {
-          if (walker.currentNode === node) {
-            offset += range.startOffset
-            found = true
-            break
-          }
+          if (walker.currentNode === node) { offset += range.startOffset; found = true; break }
           offset += walker.currentNode.textContent.length
         }
-        if (found) {
-          const before = code.innerText.slice(0, offset)
-          lineIndex = before.split('\n').length - 1
+        if (found) lineIndex = code.innerText.slice(0, offset).split('\n').length - 1
+      }
+    } else if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(e.clientX, e.clientY)
+      if (pos) {
+        const node = pos.offsetNode
+        const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT)
+        let offset = 0
+        let found = false
+        while (walker.nextNode()) {
+          if (walker.currentNode === node) { offset += pos.offset; found = true; break }
+          offset += walker.currentNode.textContent.length
         }
+        if (found) lineIndex = code.innerText.slice(0, offset).split('\n').length - 1
       }
     }
     lineIndex = Math.max(0, Math.min(lineIndex, lines.length - 1))
