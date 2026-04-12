@@ -474,7 +474,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "同时把项目目录也重命名：\n\n```bash\nmv mkdocs-wiki iMK\n```\n\n构建推送：\n\n```bash\ncd iMK\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
+                  "data": "同时把项目目录也重命名：\n\n```bash\nmv mkdocs-wiki iMD\n```\n\n构建推送：\n\n```bash\ncd iMD\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
                 }
               ],
               "meta": {
@@ -653,7 +653,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "之前没执行 `mv`，文件还在 `mkdocs-wiki/` 下。先重命名目录：\n\n```bash\nmv mkdocs-wiki iMK\ncd iMK\n```\n\n`docker-compose.yml` 内容就是：\n\n```yaml\nservices:\n  mkdocs:\n    image: wsng911/imk:latest\n    container_name: imk\n    restart: unless-stopped\n    ports:\n      - \"8080:8080\"\n```\n\nVPS 上只需要这一个文件，然后执行：\n\n```bash\ndocker compose pull\ndocker compose up -d\n```\n\n不需要把整个项目传到 VPS，文档内容已经打包进镜像里了。"
+                  "data": "之前没执行 `mv`，文件还在 `mkdocs-wiki/` 下。先重命名目录：\n\n```bash\nmv mkdocs-wiki iMD\ncd iMD\n```\n\n`docker-compose.yml` 内容就是：\n\n```yaml\nservices:\n  mkdocs:\n    image: wsng911/imk:latest\n    container_name: imk\n    restart: unless-stopped\n    ports:\n      - \"8080:8080\"\n```\n\nVPS 上只需要这一个文件，然后执行：\n\n```bash\ndocker compose pull\ndocker compose up -d\n```\n\n不需要把整个项目传到 VPS，文档内容已经打包进镜像里了。"
                 }
               ],
               "meta": {
@@ -715,7 +715,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "对，镜像还没推送，需要你在本地执行：\n\n```bash\ncd iMK\n\n# 先登录 Docker Hub\ndocker login -u wsng911\n\n# 构建并推送\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```\n\n推送成功后 VPS 再执行 `docker compose pull && docker compose up -d` 就好了。"
+                  "data": "对，镜像还没推送，需要你在本地执行：\n\n```bash\ncd iMD\n\n# 先登录 Docker Hub\ndocker login -u wsng911\n\n# 构建并推送\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```\n\n推送成功后 VPS 再执行 `docker compose pull && docker compose up -d` 就好了。"
                 }
               ],
               "meta": {
@@ -763,7 +763,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "`Dockerfile` 还在 `mkdocs-wiki/`，执行：\n\n```bash\n# 回到上级目录\ncd ..\n\n# 合并文件\ncp mkdocs-wiki/Dockerfile iMK/\ncp mkdocs-wiki/mkdocs.yml iMK/\ncp -r mkdocs-wiki/docs iMK/\n\n# 进入 iMK 重新构建\ncd iMK\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
+                  "data": "`Dockerfile` 还在 `mkdocs-wiki/`，执行：\n\n```bash\n# 回到上级目录\ncd ..\n\n# 合并文件\ncp mkdocs-wiki/Dockerfile iMD/\ncp mkdocs-wiki/mkdocs.yml iMD/\ncp -r mkdocs-wiki/docs iMD/\n\n# 进入 iMD 重新构建\ncd iMD\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
                 }
               ],
               "meta": {
@@ -818,7 +818,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "文件已就位，现在你在终端执行：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMK\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
+                  "data": "文件已就位，现在你在终端执行：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMD\ndocker build -t wsng911/imk:latest .\ndocker push wsng911/imk:latest\n```"
                 }
               ],
               "meta": {
@@ -928,7 +928,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "现在本地也可以直接多平台构建推送，在你终端执行：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMK\n\n# 创建多平台 builder（只需一次）\ndocker buildx create --use\n\n# 多平台构建并推送\ndocker buildx build --platform linux/amd64,linux/arm64 -t wsng911/imk:latest --push .\n```\n\n推送完 VPS 再 `docker compose pull && docker compose up -d` 就好了。"
+                  "data": "现在本地也可以直接多平台构建推送，在你终端执行：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMD\n\n# 创建多平台 builder（只需一次）\ndocker buildx create --use\n\n# 多平台构建并推送\ndocker buildx build --platform linux/amd64,linux/arm64 -t wsng911/imk:latest --push .\n```\n\n推送完 VPS 再 `docker compose pull && docker compose up -d` 就好了。"
                 }
               ],
               "meta": {
@@ -1121,7 +1121,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "VPS 上：\n\n```bash\n# 把 docs 目录从镜像里提取出来（首次）\ndocker run --rm -v $(pwd)/docs:/out wsng911/imk:latest cp -r /docs/docs/. /out/\n\n# 启动\ndocker compose up -d\n```\n\n然后：\n- `http://vps:8080` → iMK 查看\n- `http://vps:8081` → code-server 在线编辑，密码 `your_password`\n\n在 code-server 里编辑 `docs/` 下的 `.md` 文件保存后，MkDocs 因为 `--dirtyreload` 会自动热更新，刷新页面即可看到变化，**不需要重新构建镜像**。\n\n记得把 `your_password` 改成你自己的密码。"
+                  "data": "VPS 上：\n\n```bash\n# 把 docs 目录从镜像里提取出来（首次）\ndocker run --rm -v $(pwd)/docs:/out wsng911/imk:latest cp -r /docs/docs/. /out/\n\n# 启动\ndocker compose up -d\n```\n\n然后：\n- `http://vps:8080` → iMD 查看\n- `http://vps:8081` → code-server 在线编辑，密码 `your_password`\n\n在 code-server 里编辑 `docs/` 下的 `.md` 文件保存后，MkDocs 因为 `--dirtyreload` 会自动热更新，刷新页面即可看到变化，**不需要重新构建镜像**。\n\n记得把 `your_password` 改成你自己的密码。"
                 }
               ],
               "meta": {
@@ -1234,7 +1234,7 @@
                     "input": {
                       "__tool_use_purpose": "启动开发服务器预览",
                       "command": "npm run dev -- --host 0.0.0.0 &",
-                      "working_dir": "/Volumes/HDD-1T/iApp/iMD/iMK-web"
+                      "working_dir": "/Volumes/HDD-1T/iApp/iMD/iMD-web"
                     }
                   }
                 }
@@ -1378,7 +1378,7 @@
                     "input": {
                       "__tool_use_purpose": "启动开发服务器",
                       "command": "npm run dev",
-                      "working_dir": "/Volumes/HDD-1T/iApp/iMD/iMK-web"
+                      "working_dir": "/Volumes/HDD-1T/iApp/iMD/iMD-web"
                     }
                   }
                 }
@@ -1435,7 +1435,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "对，`npm run dev` 是前台进程，我执行会一直阻塞等待。你在终端手动跑：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMK-web\nnpm run dev\n```\n\n然后打开 `http://localhost:5173` 看效果。"
+                  "data": "对，`npm run dev` 是前台进程，我执行会一直阻塞等待。你在终端手动跑：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMD-web\nnpm run dev\n```\n\n然后打开 `http://localhost:5173` 看效果。"
                 }
               ],
               "meta": {
@@ -3650,7 +3650,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "完成，目录结构：\n\n```\niMK-server/\n├── server.js\n├── store.js\n├── auth.js\n├── routes/\n│   ├── auth.js\n│   ├── docs.js\n│   └── settings.js\n└── data/          ← 自动生成\n    ├── user.json\n    ├── docs.json\n    └── settings.json\n```\n\n启动后端：\n```bash\ncd iMK-server\nnode server.js\n```\n\n默认账号 `admin` / `123456`，数据持久化在 `data/` 目录 JSON 文件中。前端登录、文档读写、设置、改密码全部对接真实 API。"
+                  "data": "完成，目录结构：\n\n```\niMD-server/\n├── server.js\n├── store.js\n├── auth.js\n├── routes/\n│   ├── auth.js\n│   ├── docs.js\n│   └── settings.js\n└── data/          ← 自动生成\n    ├── user.json\n    ├── docs.json\n    └── settings.json\n```\n\n启动后端：\n```bash\ncd iMD-server\nnode server.js\n```\n\n默认账号 `admin` / `123456`，数据持久化在 `data/` 目录 JSON 文件中。前端登录、文档读写、设置、改密码全部对接真实 API。"
                 }
               ],
               "meta": {
@@ -8108,7 +8108,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "`/Volumes/HDD-1T/iApp/iMD/iMK-server/data/` 目录下：\n\n- `docs.json` — 所有文档内容和文件夹结构（7.4KB，最后更新 17:35）\n- `settings.json` — 字体/主题/颜色设置\n- `user.json` — 登录账号密码（bcrypt 加密）"
+                  "data": "`/Volumes/HDD-1T/iApp/iMD/iMD-server/data/` 目录下：\n\n- `docs.json` — 所有文档内容和文件夹结构（7.4KB，最后更新 17:35）\n- `settings.json` — 字体/主题/颜色设置\n- `user.json` — 登录账号密码（bcrypt 加密）"
                 }
               ],
               "meta": {
@@ -8612,7 +8612,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "后端没有单独的 updateDoc 路由，所有保存都走 `saveDocs`，已经在 `store.js` 里处理了。\n\n**重启后端**让改动生效：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMK-server && node server.js\n```\n\n重启后：\n- 旧 `docs.json` 里的 `content` 自动迁移到 `data/md/` 目录\n- 每个文档保存为 `data/md/{id}.md`\n- `docs.json` 只保留结构信息（标题、文件夹、排序）"
+                  "data": "后端没有单独的 updateDoc 路由，所有保存都走 `saveDocs`，已经在 `store.js` 里处理了。\n\n**重启后端**让改动生效：\n\n```bash\ncd /Volumes/HDD-1T/iApp/iMD/iMD-server && node server.js\n```\n\n重启后：\n- 旧 `docs.json` 里的 `content` 自动迁移到 `data/md/` 目录\n- 每个文档保存为 `data/md/{id}.md`\n- `docs.json` 只保留结构信息（标题、文件夹、排序）"
                 }
               ],
               "meta": {
@@ -11722,7 +11722,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "4个演示页面已创建完成！\n\n**访问方式：**\n在浏览器打开：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/index.html`\n\n或者分别访问：\n- 方案1：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/layout1.html`\n- 方案2：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/layout2.html`\n- 方案3：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/layout3.html`\n- 方案4：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/layout4.html`\n\n**各方案特点：**\n1. **经典三栏** - 传统、稳定、功能清晰\n2. **卡片仪表盘** - 现代、美观、信息丰富\n3. **侧边抽屉** - 简洁、沉浸、移动友好\n4. **分屏编辑器** - 专业、实时预览、适合技术文档\n\n看完后告诉我你喜欢哪个，或者想要哪几个方案的组合特性！"
+                  "data": "4个演示页面已创建完成！\n\n**访问方式：**\n在浏览器打开：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/index.html`\n\n或者分别访问：\n- 方案1：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/layout1.html`\n- 方案2：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/layout2.html`\n- 方案3：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/layout3.html`\n- 方案4：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/layout4.html`\n\n**各方案特点：**\n1. **经典三栏** - 传统、稳定、功能清晰\n2. **卡片仪表盘** - 现代、美观、信息丰富\n3. **侧边抽屉** - 简洁、沉浸、移动友好\n4. **分屏编辑器** - 专业、实时预览、适合技术文档\n\n看完后告诉我你喜欢哪个，或者想要哪几个方案的组合特性！"
                 }
               ],
               "meta": {
@@ -11936,7 +11936,7 @@
               "content": [
                 {
                   "kind": "text",
-                  "data": "创建完成！这是一个类似 Gmail 风格的设计：\n\n**特点：**\n- 左侧导航栏，圆角按钮风格\n- 选中项有蓝色背景高亮\n- 文档下方直接显示大纲子项（缩进显示）\n- 顶部搜索栏 + 图标按钮\n- 主内容区居中卡片式布局\n\n访问：`file:///Volumes/HDD-1T/iApp/iMD/iMK-web/demos/layout5.html`\n\n这个设计结合了：\n- 方案3的侧边栏导航\n- 你截图中的邮箱应用风格\n- 大纲作为文档的直接子层级\n\n喜欢这个风格吗？需要调整哪些细节？"
+                  "data": "创建完成！这是一个类似 Gmail 风格的设计：\n\n**特点：**\n- 左侧导航栏，圆角按钮风格\n- 选中项有蓝色背景高亮\n- 文档下方直接显示大纲子项（缩进显示）\n- 顶部搜索栏 + 图标按钮\n- 主内容区居中卡片式布局\n\n访问：`file:///Volumes/HDD-1T/iApp/iMD/iMD-web/demos/layout5.html`\n\n这个设计结合了：\n- 方案3的侧边栏导航\n- 你截图中的邮箱应用风格\n- 大纲作为文档的直接子层级\n\n喜欢这个风格吗？需要调整哪些细节？"
                 }
               ],
               "meta": {
@@ -14126,7 +14126,7 @@
                     "name": "shell",
                     "input": {
                       "__tool_use_purpose": "重启后端",
-                      "command": "kill $(ps aux | grep \"node server.js\" | grep -v grep | awk '{print $2}') 2>/dev/null; cd /Volumes/HDD-1T/iApp/iMD/iMK-server && node server.js &"
+                      "command": "kill $(ps aux | grep \"node server.js\" | grep -v grep | awk '{print $2}') 2>/dev/null; cd /Volumes/HDD-1T/iApp/iMD/iMD-server && node server.js &"
                     }
                   }
                 }
@@ -15670,7 +15670,7 @@
                     "name": "shell",
                     "input": {
                       "__tool_use_purpose": "重启后端",
-                      "command": "kill $(lsof -ti:3000) 2>/dev/null; cd /Volumes/HDD-1T/iApp/iMD/iMK-server && node server.js > /tmp/imd.log 2>&1 &"
+                      "command": "kill $(lsof -ti:3000) 2>/dev/null; cd /Volumes/HDD-1T/iApp/iMD/iMD-server && node server.js > /tmp/imd.log 2>&1 &"
                     }
                   }
                 }

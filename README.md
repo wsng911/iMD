@@ -55,14 +55,14 @@ docker compose up -d
 
 ```
 iMD/
-├── iMK-server/          # Node.js 后端（Express）
+├── iMD-server/          # Node.js 后端（Express）
 │   ├── routes/
 │   │   ├── auth.js      # 登录、改密码、隐私密码
 │   │   ├── docs.js      # 文档 CRUD、导入
 │   │   └── settings.js  # 主题/字体设置
 │   ├── store.js         # 文件存储（JSON + .md 文件）
 │   └── server.js        # 入口，同时 serve 前端静态文件
-├── iMK-web/             # Vue 3 前端（Vite）
+├── iMD-web/             # Vue 3 前端（Vite）
 │   └── src/
 │       ├── components/
 │       │   ├── Sidebar.vue   # 左栏：文件树、大纲次页、隐私空间
@@ -81,10 +81,10 @@ iMD/
 
 ```bash
 # 后端
-cd iMK-server && npm install && node server.js
+cd iMD-server && npm install && node server.js
 
 # 前端（另开终端）
-cd iMK-web && npm install && npm run dev
+cd iMD-web && npm install && npm run dev
 ```
 
 前端默认代理到 `http://localhost:4000`，在 `vite.config.js` 中配置 `VITE_API_URL`。

@@ -1,10 +1,10 @@
-iMK-web/node_modules
-iMK-server/node_modules
-iMK-server/data
-iMK-web/src
-iMK-web/public
-iMK-web/demos
-iMK/
+iMD-web/node_modules
+iMD-server/node_modules
+iMD-server/data
+iMD-web/src
+iMD-web/public
+iMD-web/demos
+iMD/
 imd412/
 *.zip
 ._*
