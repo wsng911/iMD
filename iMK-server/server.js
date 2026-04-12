@@ -14,7 +14,7 @@ app.use('/settings', require('./routes/settings'))
 const publicDir = path.join(__dirname, 'public')
 if (require('fs').existsSync(publicDir)) {
   app.use(express.static(publicDir))
-  app.get('*', (req, res) => res.sendFile(path.join(publicDir, 'index.html')))
+  app.get('/{*path}', (req, res) => res.sendFile(path.join(publicDir, 'index.html')))
 }
 
 const PORT = process.env.PORT || 4000
