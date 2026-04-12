@@ -244,8 +244,12 @@ body.dark { background: var(--bg); }
 
 /* 移动端优化 */
 @media (max-width: 768px) {
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .layout { display: block; }
-  .mobile-hidden { display: none !important; }
+  .mobile-page-hidden { display: none !important; }
   .sidebar { width: 100% !important; height: 100vh; max-height: 100vh; overflow-y: auto; }
   main { width: 100% !important; height: 100vh; }
+}
+@media (min-width: 769px) {
+  .mobile-back-btn { display: none !important; }
 }
