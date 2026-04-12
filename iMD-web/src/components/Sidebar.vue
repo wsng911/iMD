@@ -108,7 +108,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import Sortable from 'sortablejs'
 
 const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
@@ -121,6 +121,15 @@ const openDocOutlines = ref(new Set())
 const sideView = ref('tree')
 const activeDoc = ref(null)
 const sidebarRef = ref(null)
+
+// 恢复 activeDoc（刷新后 docs 加载完且 active 有值时）
+watch(() => [props.active, props.docs], ([id]) => {
+  if (!id || !props.docs.length) return
+  for (const g of props.docs) {
+    const doc = g.children?.find(d => d.id === id)
+    if (doc) { activeDoc.value = doc; break }
+  }
+}, { immediate: true })
 
 const headings = computed(() => {
   if (!activeDoc.value) return []
