@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "title": "个人Info",
+    "pinned": false,
+    "private": false,
+    "children": [
+      {
+        "id": 1775985771214,
+        "title": "🌍 网络账户"
+      },
+      {
+        "id": 1775991054839,
+        "title": "🔐 订阅"
+      },
+      {
+        "id": 1776004094042,
+        "title": "💳 银行账户"
+      }
+    ]
+  },
+  {
+    "id": 1775991089337,
+    "title": "软件",
+    "pinned": false,
+    "private": false,
+    "children": []
+  },
+  {
+    "id": 1776003129514.3242,
+    "title": "导入文件",
+    "pinned": false,
+    "private": false,
+    "children": []
+  }
+]

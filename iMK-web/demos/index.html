@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iMD 布局方案演示</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    .container { max-width: 1200px; width: 100%; }
+    h1 { color: white; text-align: center; font-size: 48px; margin-bottom: 16px; }
+    .subtitle { color: rgba(255,255,255,0.9); text-align: center; font-size: 18px; margin-bottom: 48px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 32px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .card:hover { 
+      transform: translateY(-8px); 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .card-number { 
+      font-size: 48px; 
+      font-weight: 700; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 24px; font-weight: 600; margin-bottom: 12px; }
+    .card-desc { color: #666; line-height: 1.6; margin-bottom: 16px; }
+    .card-features { list-style: none; }
+    .card-features li { 
+      padding: 6px 0; 
+      color: #888; 
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-features li:before { content: '✓'; color: #10b981; font-weight: 700; }
+    .btn { 
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.3s;
+    }
+    .btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>iMD 布局方案</h1>
+    <div class="subtitle">选择你喜欢的设计风格</div>
+    
+    <div class="grid">
+      <div class="card" onclick="window.open('layout1.html', '_blank')">
+        <div class="card-number">01</div>
+        <div class="card-title">经典三栏布局</div>
+        <div class="card-desc">传统文档管理系统布局，功能区域清晰分明</div>
+        <ul class="card-features">
+          <li>左侧文件树</li>
+          <li>中间内容区</li>
+          <li>右侧大纲+工具</li>
+          <li>适合桌面端</li>
+        </ul>
+        <a href="layout1.html" target="_blank" class="btn">查看演示 →</a>
+      </div>
+      
+      <div class="card" onclick="window.open('layout2.html', '_blank')">
+        <div class="card-number">02</div>
+        <div class="card-title">卡片式仪表盘</div>
+        <div class="card-desc">现代化卡片布局，信息一目了然</div>
+        <ul class="card-features">
+          <li>Tab 导航切换</li>
+          <li>卡片式展示</li>
+          <li>响应式设计</li>
+          <li>适合多功能应用</li>
+        </ul>
+        <a href="layout2.html" target="_blank" class="btn">查看演示 →</a>
+      </div>
+      
+      <div class="card" onclick="window.open('layout3.html', '_blank')">
+        <div class="card-number">03</div>
+        <div class="card-title">侧边抽屉式</div>
+        <div class="card-desc">沉浸式阅读体验，内容优先设计</div>
+        <ul class="card-features">
+          <li>侧边栏按需展开</li>
+          <li>专注阅读模式</li>
+          <li>移动端友好</li>
+          <li>适合笔记应用</li>
+        </ul>
+        <a href="layout3.html" target="_blank" class="btn">查看演示 →</a>
+      </div>
+      
+      <div class="card" onclick="window.open('layout4.html', '_blank')">
+        <div class="card-number">04</div>
+        <div class="card-title">分屏编辑器</div>
+        <div class="card-desc">专业编辑器布局，实时预览效果</div>
+        <ul class="card-features">
+          <li>左侧文件树</li>
+          <li>中间 Markdown 编辑</li>
+          <li>右侧实时预览</li>
+          <li>适合技术文档</li>
+        </ul>
+        <a href="layout4.html" target="_blank" class="btn">查看演示 →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

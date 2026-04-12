@@ -1,0 +1,42 @@
+site_name: iMK
+site_description: Personal knowledge base
+docs_dir: docs
+
+theme:
+  name: material
+  language: zh
+  palette:
+    scheme: slate
+    primary: teal
+    accent: teal
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - content.code.copy       # 代码块一键复制
+    - content.code.annotate
+    - search.highlight
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - toc:
+      permalink: true
+
+nav:
+  - 首页: index.md
+  - 代码片段:
+    - snippets/index.md
+  - 笔记:
+    - notes/index.md
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/copy.js

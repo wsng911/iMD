@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>方案3：侧边抽屉式</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    
+    .topbar { height: 56px; background: white; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; padding: 0 20px; gap: 20px; position: sticky; top: 0; z-index: 100; }
+    .menu-btn { font-size: 24px; cursor: pointer; padding: 8px; }
+    .logo { font-size: 20px; font-weight: 700; }
+    .search { flex: 1; max-width: 400px; }
+    .search input { width: 100%; padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; }
+    .icons { display: flex; gap: 12px; }
+    .icon-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .icon-btn:hover { background: #f5f5f5; }
+    
+    .content { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+    .doc-title { font-size: 36px; font-weight: 700; margin-bottom: 32px; }
+    .doc-body { line-height: 1.8; font-size: 16px; }
+    .doc-body pre { background: #f5f5f5; padding: 16px; border-radius: 8px; margin: 20px 0; }
+    
+    .actions { display: flex; gap: 12px; margin-top: 32px; padding-top: 32px; border-top: 1px solid #e5e5e5; }
+    .action-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .action-btn:hover { background: #f5f5f5; }
+    
+    .drawer { position: fixed; left: -280px; top: 0; width: 280px; height: 100vh; background: white; box-shadow: 2px 0 8px rgba(0,0,0,0.1); transition: left 0.3s; z-index: 200; overflow-y: auto; }
+    .drawer.open { left: 0; }
+    .drawer-header { padding: 20px; border-bottom: 1px solid #e5e5e5; font-weight: 600; }
+    .drawer-section { padding: 16px 0; }
+    .drawer-section-title { padding: 8px 20px; font-size: 12px; color: #666; text-transform: uppercase; }
+    .drawer-item { padding: 10px 20px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .drawer-item:hover { background: #f5f5f5; }
+    .drawer-item.active { background: #e5e5ff; color: #6366f1; font-weight: 600; }
+    .outline-item { padding: 8px 20px; cursor: pointer; font-size: 13px; color: #666; display: flex; align-items: center; gap: 6px; }
+    .outline-item:hover { background: #e5e5e5; color: #333; }
+    
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 150; }
+    .overlay.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="menu-btn" onclick="toggleDrawer()">☰</div>
+    <div class="logo">iMD</div>
+    <div class="search"><input type="text" placeholder="搜索..."></div>
+    <div class="icons">
+      <div class="icon-btn">@</div>
+      <div class="icon-btn">⚙️</div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <h1 class="doc-title">邮箱 Email</h1>
+    <div class="doc-body">
+      <p>这是一个沉浸式的阅读体验，内容优先，侧边栏按需展开。</p>
+      <p style="margin-top: 16px;">适合专注阅读和写作的场景。</p>
+      <pre>
+账号：example@gmail.com
+密码：your_password
+SMTP：smtp.gmail.com:587
+      </pre>
+      <p>支持 Markdown 渲染，代码高亮，图片预览等功能。</p>
+    </div>
+    
+    <div class="actions">
+      <button class="action-btn">📝 编辑</button>
+      <button class="action-btn">💾 保存</button>
+      <button class="action-btn">📤 导出</button>
+    </div>
+  </div>
+  
+  <div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">文档</div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">文件夹</div>
+      <div class="drawer-item">📁 账号信息</div>
+      <div class="drawer-item active" style="padding-left: 40px;">📄 邮箱 Email</div>
+      <div class="outline-item h1" style="padding-left: 60px;">📍 Gmail 配置</div>
+      <div class="outline-item h2" style="padding-left: 76px;">📍 SMTP 设置</div>
+      <div class="outline-item h2" style="padding-left: 76px;">📍 安全设置</div>
+      <div class="outline-item h1" style="padding-left: 60px;">📍 Outlook 配置</div>
+      <div class="outline-item h2" style="padding-left: 76px;">📍 IMAP 设置</div>
+      
+      <div class="drawer-item" style="padding-left: 40px;">📄 支付账号</div>
+      <div class="drawer-item">📁 网络账户</div>
+      <div class="drawer-item" style="padding-left: 40px;">📄 华为Flexus</div>
+      <div class="drawer-item" style="padding-left: 40px;">📄 Oracle</div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">其他</div>
+      <div class="drawer-item">🔒 隐私空间</div>
+      <div class="drawer-item">📊 统计</div>
+      <div class="drawer-item">⚙️ 设置</div>
+    </div>
+  </div>
+  
+  <script>
+    function toggleDrawer() {
+      const drawer = document.getElementById('drawer');
+      const overlay = document.getElementById('overlay');
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+    
+    // 大纲点击跳转
+    document.querySelectorAll('.outline-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // 移除其他高亮
+        document.querySelectorAll('.outline-item').forEach(i => i.style.background = '');
+        // 高亮当前项
+        item.style.background = '#e5e5ff';
+        item.style.color = '#6366f1';
+        // 关闭抽屉
+        toggleDrawer();
+        // 实际项目中这里会滚动到对应标题
+        console.log('跳转到:', item.textContent);
+      });
+    });
+  </script>
+</body>
+</html>

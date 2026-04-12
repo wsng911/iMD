@@ -1,0 +1,21 @@
+services:
+  mkdocs:
+    image: wsng911/imk:latest
+    container_name: imk
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docs:/docs/docs
+    command: serve --dev-addr=0.0.0.0:8080 --dirtyreload
+
+  editor:
+    image: codercom/code-server:latest
+    container_name: imk-editor
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./docs:/home/coder/docs
+    environment:
+      - PASSWORD=your_password

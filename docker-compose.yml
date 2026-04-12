@@ -1,0 +1,8 @@
+services:
+  imd:
+    image: wsng911/imd:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/server/data
+    restart: unless-stopped
