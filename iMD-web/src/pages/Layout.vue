@@ -98,7 +98,10 @@ function pushPage(page) {
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
-function goBack() { history.back() }
+function goBack() {
+  if (mobilePage.value === 'main') { pushPage('outline'); return }
+  if (mobilePage.value === 'outline') { pushPage('sidebar'); return }
+}
 function goMain() { pushPage('main') }
 
 function onPopState() {
@@ -119,9 +122,11 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
-  // 刷新后恢复页面状态
-  const savedPage = localStorage.getItem('imk_mobile_page')
-  if (savedPage && current.value) mobilePage.value = savedPage
+  // 刷新后恢复手机端页面状态
+  if (window.innerWidth <= 768) {
+    const savedPage = localStorage.getItem('imk_mobile_page')
+    if (savedPage && current.value) mobilePage.value = savedPage
+  }
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
