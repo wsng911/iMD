@@ -108,7 +108,6 @@ function fallbackCopy(text, cb) {
 }
 
 function handleClick(e) {
-  // 拦截自动识别的邮箱/URL 链接，不跳转
   const a = e.target.closest('a')
   if (a && (a.href.startsWith('mailto:') || a.dataset.autolink)) {
     e.preventDefault()
@@ -116,20 +115,14 @@ function handleClick(e) {
     return
   }
   const el = getEl(e)
-  if (el) copyText(el)
+  if (el) { e.preventDefault(); copyText(el) }
 }
 
 function handleDblClick(e) {
-  // 双击代码块复制整块
   const pre = e.target.closest('pre')
   if (pre) {
     const code = pre.querySelector('code') || pre
     copyText(code)
-    return
   }
-  const el = getEl(e)
-  if (!el) return
-  copyText(el)
-  el.style.textDecoration = el.style.textDecoration === 'line-through' ? '' : 'line-through'
 }
 </script>
