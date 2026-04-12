@@ -93,7 +93,11 @@ const mode = ref('view')
 const outlineHeight = ref(parseInt(localStorage.getItem('imk_outline_h')) || 300)
 const activeOutline = ref(null)
 const isMobile = ref(window.innerWidth <= 768)
-const onResize = () => { isMobile.value = window.innerWidth <= 768 }
+const onResize = () => {
+  const mobile = window.innerWidth <= 768
+  if (mobile && !isMobile.value) sidebarCollapsed.value = true
+  isMobile.value = mobile
+}
 window.addEventListener('resize', onResize)
 onUnmounted(() => window.removeEventListener('resize', onResize))
 const sidebarCollapsed = ref(isMobile.value)
