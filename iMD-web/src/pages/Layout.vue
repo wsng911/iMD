@@ -1,12 +1,9 @@
 <template>
   <div class="layout">
-    <div class="sidebar-overlay" v-show="isMobile && !sidebarCollapsed" @click="sidebarCollapsed = true"></div>
-    <!-- 移动端独立菜单按钮，sidebar 折叠时显示 -->
-    <button v-if="isMobile && sidebarCollapsed" class="mobile-menu-btn" @click="sidebarCollapsed = false">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
+    <!-- 左栏：移动端第一页 / 桌面端左侧 -->
     <Sidebar
-      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :class="{ open: !sidebarCollapsed }" :outlineTree="outlineTree" :headings="headings"
+      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
+      :class="{ 'mobile-hidden': isMobile && mobilePage === 'main' }"
       @select="selectDoc" @toggle="sidebarCollapsed = !sidebarCollapsed"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
@@ -14,35 +11,31 @@
       @import="importMd"
       @export="exportMd"
     />
-    <main class="main">
-      <div class="topbar" :style="sidebarCollapsed ? 'padding-left: 52px' : ''">
+
+    <!-- 右栏：移动端第二页 / 桌面端右侧 -->
+    <main class="main" :class="{ 'mobile-hidden': isMobile && mobilePage === 'sidebar' }">
+      <div class="topbar">
+        <!-- 移动端返回按钮 -->
+        <button v-if="isMobile" class="tb-btn" @click="mobilePage = 'sidebar'" style="flex-shrink:0;margin-right:4px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
         <span class="doc-title">{{ current?.title || '' }}</span>
         <div class="topbar-right">
-          <!-- 字体大小 -->
           <button class="tb-btn font-btn" @click="settings.fontSize = Math.max(12, settings.fontSize - 1); persistSettings()">A-</button>
           <button class="tb-btn font-btn" @click="settings.fontSize = 15; persistSettings()">A</button>
           <button class="tb-btn font-btn" @click="settings.fontSize = Math.min(22, settings.fontSize + 1); persistSettings()">A+</button>
-
-          <!-- 强调色 -->
           <input type="color" :value="customColor" @input="setCustomColor" title="配色" class="color-picker-round" />
-
-          <!-- 导入导出已移至左栏底部 -->
           <input ref="importRef" type="file" accept=".md,.zip" style="display:none" @change="onImportFile" />
-
-          <!-- 主题切换 -->
           <button class="tb-btn" @click="toggleTheme" :title="settings.theme === 'dark' ? '切换亮色' : '切换暗色'">
             <svg v-if="settings.theme === 'dark'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </button>
-
-          <!-- 改密码 -->
           <button class="tb-btn" @click="showPwd = !showPwd" title="修改密码">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </button>
         </div>
       </div>
 
-      <!-- 改密码下拉 -->
       <div v-if="showPwd" class="pwd-bar">
         <div class="pwd-fields">
           <input v-model="pwd.old" type="password" placeholder="当前密码" />
@@ -90,22 +83,22 @@ const importRef = ref(null)
 const docs = ref([])
 const current = ref(null)
 const mode = ref('view')
-const outlineHeight = ref(parseInt(localStorage.getItem('imk_outline_h')) || 300)
-const activeOutline = ref(null)
 const isMobile = ref(window.innerWidth <= 768)
-const onResize = () => {
-  const mobile = window.innerWidth <= 768
-  if (mobile && !isMobile.value) sidebarCollapsed.value = true
-  isMobile.value = mobile
-}
+const mobilePage = ref('sidebar') // 'sidebar' | 'main'
+const onResize = () => { isMobile.value = window.innerWidth <= 768 }
 window.addEventListener('resize', onResize)
 onUnmounted(() => window.removeEventListener('resize', onResize))
-const sidebarCollapsed = ref(isMobile.value)
+const sidebarCollapsed = ref(false)
 const showPwd = ref(false)
 const pwd = ref({ old: '', new1: '', new2: '' })
 const pwdMsg = ref(null)
 
-function selectDoc(doc) { current.value = doc; mode.value = 'view'; localStorage.setItem('imk_last_doc', doc.id); if (isMobile.value) sidebarCollapsed.value = true }
+function selectDoc(doc) {
+  current.value = doc
+  mode.value = 'view'
+  localStorage.setItem('imk_last_doc', doc.id)
+  if (isMobile.value) mobilePage.value = 'main'
+}
 
 const headings = computed(() => {
   if (!current.value?.content) return []
@@ -133,21 +126,15 @@ const outlineTree = computed(() => {
 function scrollTo(id) {
   const heading = headings.value.find(h => h.id === id)
   if (!heading) return
-
   if (mode.value === 'edit') {
-    // 编辑模式：在 md-editor 的 textarea/cm 里找对应标题行滚动
     const editorEl = document.querySelector('.md-editor .cm-scroller, .md-editor textarea')
     if (!editorEl) return
     const lines = (current.value?.content || '').split('\n')
     const lineIdx = lines.findIndex(l => l.replace(/^#+\s*/, '').trim() === heading.text)
-    if (lineIdx < 0) return
-    const lineHeight = 20
-    editorEl.scrollTop = lineIdx * lineHeight
+    if (lineIdx >= 0) editorEl.scrollTop = lineIdx * 20
     return
   }
-
-  const allHeadings = [...document.querySelectorAll('.md-wrap h1,.md-wrap h2,.md-wrap h3')]
-  const el = allHeadings.find(h => h.textContent.trim() === heading.text)
+  const el = [...document.querySelectorAll('.md-wrap h1,.md-wrap h2,.md-wrap h3')].find(h => h.textContent.trim() === heading.text)
   if (!el) return
   document.querySelectorAll('.md-wrap details').forEach(d => { d.open = false })
   let next = el.nextElementSibling
@@ -157,16 +144,18 @@ function scrollTo(id) {
     next = next.nextElementSibling
   }
   el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-}async function onSave(content) {
+}
+
+async function onSave(content) {
   current.value.content = content
   mode.value = 'view'
   await api.updateDoc(current.value.id, { content }).catch(() => {})
 }
+
 function logout() { localStorage.removeItem('imk_token'); router.push('/login') }
 
-async function importMd() {
-  importRef.value?.click()
-}
+async function importMd() { importRef.value?.click() }
+
 async function onImportFile(e) {
   const file = e.target.files[0]
   if (!file) return
@@ -174,16 +163,13 @@ async function onImportFile(e) {
   if (res?.docs) docs.value = res.docs
   e.target.value = ''
 }
+
 async function exportMd() {
   const zip = new JSZip()
-  
   docs.value.forEach(group => {
     const folder = zip.folder(group.title)
-    group.children?.forEach(doc => {
-      folder.file(`${doc.title}.md`, doc.content || '')
-    })
+    group.children?.forEach(doc => { folder.file(`${doc.title}.md`, doc.content || '') })
   })
-  
   const blob = await zip.generateAsync({ type: 'blob' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
@@ -192,26 +178,11 @@ async function exportMd() {
   URL.revokeObjectURL(a.href)
 }
 
-function clearOutlineSelection() {
-  activeOutline.value = null
-  document.querySelectorAll('.md-wrap details').forEach(d => { d.open = false })
-}
-
-function toggleTheme() {
-  settings.theme = settings.theme === 'dark' ? 'light' : 'dark'
-  persistSettings()
-}
-
-function setAccent(val) {
-  settings.accent = val
-  persistSettings()
-}
+function toggleTheme() { settings.theme = settings.theme === 'dark' ? 'light' : 'dark'; persistSettings() }
 
 function setCustomColor(e) {
-  const hex = e.target.value
-  // 直接写入 CSS 变量，不走预设 key
-  document.documentElement.style.setProperty('--accent', hex)
-  settings.accent = hex
+  document.documentElement.style.setProperty('--accent', e.target.value)
+  settings.accent = e.target.value
   persistSettings()
 }
 
