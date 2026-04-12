@@ -96,6 +96,7 @@ const mobilePage = ref('sidebar') // sidebar | outline | main
 function pushPage(page) {
   history.pushState({ page }, '')
   mobilePage.value = page
+  localStorage.setItem('imk_mobile_page', page)
 }
 function goBack() { history.back() }
 function goMain() { pushPage('main') }
@@ -103,6 +104,7 @@ function goMain() { pushPage('main') }
 function onPopState() {
   const page = history.state?.page || 'sidebar'
   mobilePage.value = page
+  localStorage.setItem('imk_mobile_page', page)
 }
 
 onMounted(async () => {
@@ -116,6 +118,9 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
+  // 刷新后恢复页面状态
+  const savedPage = localStorage.getItem('imk_mobile_page')
+  if (savedPage && current.value) mobilePage.value = savedPage
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
