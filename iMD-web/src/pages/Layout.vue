@@ -1,6 +1,10 @@
 <template>
   <div class="layout">
     <div class="sidebar-overlay" v-show="isMobile && !sidebarCollapsed" @click="sidebarCollapsed = true"></div>
+    <!-- 移动端独立菜单按钮，sidebar 折叠时显示 -->
+    <button v-if="isMobile && sidebarCollapsed" class="mobile-menu-btn" @click="sidebarCollapsed = false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :class="{ open: !sidebarCollapsed }" :outlineTree="outlineTree" :headings="headings"
       @select="selectDoc" @toggle="sidebarCollapsed = !sidebarCollapsed"
