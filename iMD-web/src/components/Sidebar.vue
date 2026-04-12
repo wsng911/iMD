@@ -115,6 +115,7 @@
       </div>
 
       <!-- 密码验证弹窗 -->
+      <Teleport to="body">
       <div v-if="showPrivateVerify" class="private-modal">
         <div class="private-modal-box">
           <p>请输入隐私密码</p>
@@ -126,8 +127,10 @@
           <p v-if="privateErr" class="modal-err">{{ privateErr }}</p>
         </div>
       </div>
+      </Teleport>
 
       <!-- 设置密码弹窗 -->
+      <Teleport to="body">
       <div v-if="showPrivatePwdModal" class="private-modal">
         <div class="private-modal-box">
           <p>设置隐私密码</p>
@@ -141,6 +144,7 @@
           <p v-if="pwdMsg" :class="['modal-err', { ok: pwdMsg.ok }]">{{ pwdMsg.text }}</p>
         </div>
       </div>
+      </Teleport>
 
       <div v-if="privateOpen">
         <div v-for="group in privateDocs" :key="group.id" class="group">
