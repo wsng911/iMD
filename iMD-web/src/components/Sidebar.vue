@@ -243,14 +243,14 @@ function toggleDocOutline(docId) {
 
 let clickTimer = null
 function onDocClick(doc) {
-  if (clickTimer) return  // 双击时忽略单击
+  if (clickTimer) return
   clickTimer = setTimeout(() => {
     clickTimer = null
     selectItem(doc.id)
     emit('select', doc)
     sideView.value = 'outline'
     activeDoc.value = doc
-  }, 220)
+  }, window.innerWidth <= 768 ? 0 : 220)
 }
 function onDocDblClick(doc) {
   clearTimeout(clickTimer)
