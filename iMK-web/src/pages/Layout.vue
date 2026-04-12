@@ -22,6 +22,7 @@
           <input type="color" :value="customColor" @input="setCustomColor" title="配色" class="color-picker-round" />
 
           <!-- 导入导出已移至左栏底部 -->
+          <input ref="importRef" type="file" accept=".md,.zip" style="display:none" @change="onImportFile" />
 
           <!-- 主题切换 -->
           <button class="tb-btn" @click="toggleTheme" :title="settings.theme === 'dark' ? '切换亮色' : '切换暗色'">
@@ -149,10 +150,14 @@ function scrollTo(id) {
 function logout() { localStorage.removeItem('imk_token'); router.push('/login') }
 
 async function importMd() {
-  const res = await api.importFromData()
-  if (res?.docs) {
-    docs.value = res.docs
-  }
+  importRef.value?.click()
+}
+async function onImportFile(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  const res = await api.importFile(file)
+  if (res?.docs) docs.value = res.docs
+  e.target.value = ''
 }
 async function exportMd() {
   const zip = new JSZip()

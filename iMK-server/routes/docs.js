@@ -3,44 +3,49 @@ const { verify } = require('../auth')
 const store = require('../store')
 const fs = require('fs')
 const path = require('path')
+const multer = require('multer')
+const JSZip = require('jszip')
+
+const upload = multer({ storage: multer.memoryStorage() })
 
 router.use(verify)
 
-// POST /docs/import — 扫描 data 文件夹导入 .md 文件
-router.post('/import', (req, res) => {
-  const dataDir = path.join(__dirname, '../data')
+// POST /docs/import — 上传 .md 或 .zip 文件导入
+router.post('/import', upload.single('file'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'no file' })
   const docs = store.getDocs()
 
-  function scanDir(dir, groupTitle) {
-    if (!fs.existsSync(dir)) return
-    const entries = fs.readdirSync(dir, { withFileTypes: true })
-    
-    // 找或创建对应分组
+  function importMd(title, content, groupTitle = '导入文件') {
     let group = docs.find(g => g.title === groupTitle)
     if (!group) {
-      group = { id: Date.now() + Math.random(), title: groupTitle, pinned: false, private: false, children: [] }
+      group = { id: Date.now() + Math.floor(Math.random() * 9999), title: groupTitle, pinned: false, private: false, children: [] }
       docs.push(group)
     }
-
-    entries.forEach(entry => {
-      if (entry.isDirectory() && entry.name !== 'md') {
-        scanDir(path.join(dir, entry.name), entry.name)
-      } else if (entry.isFile() && entry.name.endsWith('.md')) {
-        const title = entry.name.replace(/\.md$/, '')
-        const content = fs.readFileSync(path.join(dir, entry.name), 'utf8')
-        const existing = group.children.find(d => d.title === title)
-        if (existing) {
-          store.writeMd(existing.id, content)
-        } else {
-          const id = Date.now() + Math.floor(Math.random() * 10000)
-          group.children.push({ id, title })
-          store.writeMd(id, content)
-        }
-      }
-    })
+    const existing = group.children.find(d => d.title === title)
+    if (existing) {
+      store.writeMd(existing.id, content)
+    } else {
+      const id = Date.now() + Math.floor(Math.random() * 9999)
+      group.children.push({ id, title })
+      store.writeMd(id, content)
+    }
   }
 
-  scanDir(dataDir, '导入文件')
+  if (req.file.originalname.endsWith('.zip')) {
+    const zip = await JSZip.loadAsync(req.file.buffer)
+    for (const [filePath, file] of Object.entries(zip.files)) {
+      if (file.dir || !filePath.endsWith('.md')) continue
+      const parts = filePath.split('/')
+      const title = parts[parts.length - 1].replace(/\.md$/, '')
+      const groupTitle = parts.length > 1 ? parts[0] : '导入文件'
+      const content = await file.async('string')
+      importMd(title, content, groupTitle)
+    }
+  } else {
+    const title = req.file.originalname.replace(/\.md$/, '')
+    importMd(title, req.file.buffer.toString('utf8'))
+  }
+
   store.saveDocs(docs)
   res.json({ ok: true, docs: store.getDocs() })
 })

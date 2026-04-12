@@ -22,4 +22,22 @@ router.post('/change-password', require('../auth').verify, (req, res) => {
   res.json({ ok: true })
 })
 
+// POST /auth/private-verify — 验证隐私密码
+router.post('/private-verify', require('../auth').verify, (req, res) => {
+  const { password } = req.body
+  const hash = store.getPrivatePwd()
+  if (!hash) return res.json({ ok: true, unset: true })
+  res.json({ ok: bcrypt.compareSync(password, hash) })
+})
+
+// POST /auth/private-password — 设置/修改隐私密码
+router.post('/private-password', require('../auth').verify, (req, res) => {
+  const { oldPassword, newPassword } = req.body
+  const hash = store.getPrivatePwd()
+  if (hash && !bcrypt.compareSync(oldPassword, hash))
+    return res.status(400).json({ error: '当前密码错误' })
+  store.savePrivatePwd(bcrypt.hashSync(newPassword, 10))
+  res.json({ ok: true })
+})
+
 module.exports = router

@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const BASE = import.meta.env.VITE_API_URL || ''
 
 function headers() {
   const token = localStorage.getItem('imk_token')
@@ -22,10 +22,17 @@ async function req(method, path, body) {
 
 export const api = {
   login:          (data)    => req('POST', '/auth/login', data),
-  changePassword: (data)    => req('POST', '/auth/change-password', data),
+  changePassword:    (data) => req('POST', '/auth/change-password', data),
+  privateVerify:     (pwd)  => req('POST', '/auth/private-verify', { password: pwd }),
+  setPrivatePassword:(data) => req('POST', '/auth/private-password', data),
   getDocs:        ()        => req('GET',  '/docs'),
   saveDocs:       (docs)    => req('PUT',  '/docs', docs),
   importFromData: ()        => req('POST', '/docs/import'),
+  importFile:     (file)    => {
+    const form = new FormData(); form.append('file', file)
+    const token = localStorage.getItem('imk_token')
+    return fetch(BASE + '/docs/import', { method: 'POST', headers: token ? { Authorization: `Bearer ${token}` } : {}, body: form }).then(r => r.json())
+  },
   createDoc:      (data)    => req('POST', '/docs', data),
   updateDoc:      (id, data)=> req('PUT',  `/docs/${id}`, data),
   deleteDoc:      (id)      => req('DELETE',`/docs/${id}`),

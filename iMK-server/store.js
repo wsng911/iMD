@@ -2,9 +2,10 @@ const fs = require('fs')
 const path = require('path')
 
 const FILES = {
-  user:     path.join(__dirname, 'data/user.json'),
-  docs:     path.join(__dirname, 'data/docs.json'),
-  settings: path.join(__dirname, 'data/settings.json'),
+  user:       path.join(__dirname, 'data/user.json'),
+  docs:       path.join(__dirname, 'data/docs.json'),
+  settings:   path.join(__dirname, 'data/settings.json'),
+  privatePwd: path.join(__dirname, 'data/private.json'),
 }
 const MD_DIR = path.join(__dirname, 'data/md')
 if (!fs.existsSync(MD_DIR)) fs.mkdirSync(MD_DIR, { recursive: true })
@@ -82,11 +83,13 @@ function saveDocs(docs) {
 }
 
 module.exports = {
-  getUser:     () => read(FILES.user),
-  saveUser:    d  => write(FILES.user, d),
+  getUser:        () => read(FILES.user),
+  saveUser:       d  => write(FILES.user, d),
   getDocs,
   saveDocs,
-  getSettings: () => read(FILES.settings),
-  saveSettings:d  => write(FILES.settings, d),
+  getSettings:    () => read(FILES.settings),
+  saveSettings:   d  => write(FILES.settings, d),
+  getPrivatePwd:  () => read(FILES.privatePwd)?.hash || null,
+  savePrivatePwd: h  => write(FILES.privatePwd, { hash: h }),
   readMd, writeMd,
 }

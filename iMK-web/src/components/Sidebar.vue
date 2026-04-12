@@ -100,13 +100,46 @@
 
     <!-- 隐私空间 -->
     <div v-if="!collapsed" class="private-zone" :style="{ height: privateHeight + 'px', overflow: 'hidden' }">
-      <div class="private-header" @click="togglePrivate">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="11" width="18" height="11" rx="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        <span>隐私空间</span>
-        <span class="fold-icon">{{ privateOpen ? '▾' : '▸' }}</span>
+      <div class="private-header">
+        <div class="private-header-left" @click="onPrivateClick">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>隐私空间</span>
+          <span class="fold-icon">{{ privateOpen ? '▾' : '▸' }}</span>
+        </div>
+        <button class="footer-icon-btn" title="设置密码" @click.stop="showPrivatePwdModal = true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </button>
+      </div>
+
+      <!-- 密码验证弹窗 -->
+      <div v-if="showPrivateVerify" class="private-modal">
+        <div class="private-modal-box">
+          <p>请输入隐私密码</p>
+          <input v-model="privateInput" type="password" placeholder="密码" @keyup.enter="verifyPrivate" />
+          <div class="modal-btns">
+            <button @click="verifyPrivate">确认</button>
+            <button @click="showPrivateVerify = false">取消</button>
+          </div>
+          <p v-if="privateErr" class="modal-err">{{ privateErr }}</p>
+        </div>
+      </div>
+
+      <!-- 设置密码弹窗 -->
+      <div v-if="showPrivatePwdModal" class="private-modal">
+        <div class="private-modal-box">
+          <p>设置隐私密码</p>
+          <input v-model="pwdForm.old" type="password" placeholder="当前密码（未设置则留空）" />
+          <input v-model="pwdForm.new1" type="password" placeholder="新密码" />
+          <input v-model="pwdForm.new2" type="password" placeholder="确认新密码" />
+          <div class="modal-btns">
+            <button @click="savePrivatePwd">保存</button>
+            <button @click="showPrivatePwdModal = false">取消</button>
+          </div>
+          <p v-if="pwdMsg" :class="['modal-err', { ok: pwdMsg.ok }]">{{ pwdMsg.text }}</p>
+        </div>
       </div>
 
       <div v-if="privateOpen">
@@ -155,6 +188,7 @@
         <button class="footer-icon-btn" @click="$emit('export')" title="导出">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
+        <span class="version-tag">v1.0</span>
         <button class="logout-btn" @click="$emit('logout')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           退出
@@ -168,6 +202,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import Sortable from 'sortablejs'
 import OutlineNode from './OutlineNode.vue'
+import { api } from '../api.js'
 
 const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
 const emit = defineEmits(['select', 'toggle', 'logout', 'update:docs', 'new-doc', 'jump', 'import', 'export'])
@@ -334,6 +369,45 @@ function confirmNewDoc(gid) {
 
 // 隐私空间
 const privateOpen = ref(false)
+const privateUnlocked = ref(false)
+const showPrivateVerify = ref(false)
+const showPrivatePwdModal = ref(false)
+const privateInput = ref('')
+const privateErr = ref('')
+const pwdForm = ref({ old: '', new1: '', new2: '' })
+const pwdMsg = ref(null)
+
+async function onPrivateClick() {
+  if (privateUnlocked.value) { togglePrivate(); return }
+  const res = await api.privateVerify('')
+  if (res.unset) { privateUnlocked.value = true; togglePrivate(); return }
+  showPrivateVerify.value = true
+  privateInput.value = ''
+  privateErr.value = ''
+}
+
+async function verifyPrivate() {
+  const res = await api.privateVerify(privateInput.value)
+  if (res.ok) {
+    privateUnlocked.value = true
+    showPrivateVerify.value = false
+    togglePrivate()
+  } else {
+    privateErr.value = '密码错误'
+  }
+}
+
+async function savePrivatePwd() {
+  if (pwdForm.value.new1 !== pwdForm.value.new2) { pwdMsg.value = { ok: false, text: '两次密码不一致' }; return }
+  const res = await api.setPrivatePassword({ oldPassword: pwdForm.value.old, newPassword: pwdForm.value.new1 }).catch(e => e)
+  if (res.ok) {
+    pwdMsg.value = { ok: true, text: '设置成功' }
+    pwdForm.value = { old: '', new1: '', new2: '' }
+    setTimeout(() => { showPrivatePwdModal.value = false; pwdMsg.value = null }, 1000)
+  } else {
+    pwdMsg.value = { ok: false, text: res.error || '设置失败' }
+  }
+}
 const dragOver = ref(false)
 const sidebarRef = ref(null)
 const HEADER_H = 48
