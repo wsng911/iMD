@@ -32,51 +32,49 @@ watch(() => props.content, () => {
 }, { immediate: true })
 
 function getEl(e) {
-  // 行内 code 整行复制
   const inlineCode = e.target.closest(':not(pre) > code')
   if (inlineCode) return inlineCode
-  // pre 内：用 caretPositionFromPoint 或逐行比对 Y 找到点击行
+
   const pre = e.target.closest('pre')
   if (pre) {
     const code = pre.querySelector('code') || pre
-    const lines = code.innerText.split('\n').filter((_, i, arr) => !(i === arr.length - 1 && _ === ''))
+    const lines = code.innerText.split('\n')
     if (lines.length <= 1) return code
 
-    // 用每行的 getBoundingClientRect 精确匹配
-    const lineEls = Array.from(code.childNodes)
-    // 找到点击 Y 对应的行索引（通过 range）
-    let lineIndex = 0
+    // 用 caret API 找点击位置在整个 code 文本中的字符偏移
+    let charOffset = null
     if (document.caretRangeFromPoint) {
       const range = document.caretRangeFromPoint(e.clientX, e.clientY)
       if (range) {
-        const node = range.startContainer
         const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT)
         let offset = 0
-        let found = false
         while (walker.nextNode()) {
-          if (walker.currentNode === node) { offset += range.startOffset; found = true; break }
+          if (walker.currentNode === range.startContainer) { charOffset = offset + range.startOffset; break }
           offset += walker.currentNode.textContent.length
         }
-        if (found) lineIndex = code.innerText.slice(0, offset).split('\n').length - 1
       }
     } else if (document.caretPositionFromPoint) {
       const pos = document.caretPositionFromPoint(e.clientX, e.clientY)
       if (pos) {
-        const node = pos.offsetNode
         const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT)
         let offset = 0
-        let found = false
         while (walker.nextNode()) {
-          if (walker.currentNode === node) { offset += pos.offset; found = true; break }
+          if (walker.currentNode === pos.offsetNode) { charOffset = offset + pos.offset; break }
           offset += walker.currentNode.textContent.length
         }
-        if (found) lineIndex = code.innerText.slice(0, offset).split('\n').length - 1
       }
     }
-    lineIndex = Math.max(0, Math.min(lineIndex, lines.length - 1))
-    const line = lines[lineIndex]
-    return { innerText: line, textContent: line }
+
+    if (charOffset !== null) {
+      // 用 innerText（保留换行）定位行号
+      const lineIndex = code.innerText.slice(0, charOffset).split('\n').length - 1
+      const line = lines[Math.max(0, Math.min(lineIndex, lines.length - 1))]
+      if (line.trim()) return { innerText: line, textContent: line }
+    }
+
+    return code
   }
+
   return e.target.closest('p, li, td, th')
 }
 
