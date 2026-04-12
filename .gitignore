@@ -1,0 +1,7 @@
+node_modules/
+iMK-server/node_modules/
+iMK-web/node_modules/
+iMK-server/data/
+iMK-web/dist/
+imd412/
+*.zip
