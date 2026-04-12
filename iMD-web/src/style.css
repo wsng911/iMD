@@ -141,7 +141,7 @@ body.dark { background: var(--bg); }
 .inline-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--accent); border-radius: 4px; padding: 3px 8px; color: var(--text); font-size: var(--font-size); outline: none; }
 
 /* ── 隐私空间 ── */
-.private-zone { position: absolute; top: 66%; left: 0; right: 0; overflow-y: auto; background: var(--bg2); border-top: 1px solid var(--border); z-index: 10; }
+.private-zone { overflow-y: auto; background: var(--bg2); border-top: 1px solid var(--border); flex-shrink: 0; }
 .private-resizer { height: 6px; cursor: ns-resize; background: transparent; border-top: 2px solid var(--border); flex-shrink: 0; }
 .private-resizer.dashed { border-top-style: dashed; }
 .private-resizer:hover, .private-resizer:active { border-top-color: var(--accent); }

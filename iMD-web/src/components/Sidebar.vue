@@ -99,7 +99,7 @@
     </div><!-- /sidebar-middle -->
 
     <!-- 隐私空间 -->
-    <div v-if="!collapsed" class="private-zone" :style="{ height: privateHeight + 'px', overflow: 'hidden' }">
+    <div v-if="!collapsed" class="private-zone">
       <div class="private-header">
         <div class="private-header-left" @click="onPrivateClick">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -201,7 +201,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import Sortable from 'sortablejs'
-import OutlineNode from './OutlineNode.vue'
 import { api } from '../api.js'
 
 const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
