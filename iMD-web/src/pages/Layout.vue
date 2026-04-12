@@ -11,7 +11,7 @@
     />
 
     <!-- 第2页：大纲（仅手机端） -->
-    <div class="mobile-outline-page mobile-page-hidden" :class="{ 'mobile-page-show': mobilePage === 'outline' }">
+    <div class="mobile-outline-page" :class="{ 'mobile-page-hidden': mobilePage !== 'outline' }">
       <div class="topbar">
         <button class="mobile-back-btn tb-btn" @click="goBack" style="flex-shrink:0;margin-right:4px">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
