@@ -188,12 +188,12 @@ body.dark { background: var(--bg); }
 .viewer { flex: 1; padding: 64px 48px 32px; overflow-y: auto; min-height: 0; }
 /* 隐藏代码块折叠时的复制按钮 */
 .md-editor-preview details.md-editor-code:not([open]) .md-editor-copy-button { display: none; }
-/* 折叠区块和代码块工具栏跟随主题 */
+/* 折叠区块和代码块工具栏跟随主题，内容区保持 hljs 原生背景 */
 .md-wrap .md-editor-code,
-.md-wrap details.md-editor-code { background: var(--bg3) !important; border-radius: 8px !important; border: none !important; }
+.md-wrap details.md-editor-code { border-radius: 8px !important; border: none !important; overflow: hidden !important; }
 .md-wrap details.md-editor-code summary,
-.md-wrap .md-editor-code-head { background: var(--bg3) !important; color: var(--text) !important; border-radius: 8px !important; }
-.md-wrap details.md-editor-code[open] summary { border-radius: 8px 8px 0 0 !important; }
+.md-wrap .md-editor-code-head { background: var(--bg3) !important; color: var(--text) !important; }
+.md-wrap details.md-editor-code[open] summary { border-radius: 0 !important; }
 .md-wrap .md-editor-copy-button { background: var(--bg4) !important; color: transparent !important; font-size: 0 !important; width: 28px !important; height: 28px !important; padding: 0 !important; display: flex !important; align-items: center !important; justify-content: center !important; }
 .md-wrap .md-editor-copy-button::after { content: ''; display: block; width: 14px; height: 14px; background-color: var(--text2); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") no-repeat center; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") no-repeat center; }
 .md-editor-preview, .md-editor-preview p, .md-editor-preview li { font-size: var(--font-size) !important; }
