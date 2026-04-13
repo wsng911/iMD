@@ -1,0 +1,12 @@
+services:
+  telebox:
+    build: .
+    image: telebox:latest
+    container_name: telebox
+    restart: unless-stopped
+    volumes:
+      - ./data/session:/root/telebox/my_session   # Telegram 登录会话（最关键）
+      - ./data/plugins:/root/telebox/plugins       # 用户安装的插件
+      - ./data/env:/root/telebox/.env              # 配置文件
+    stdin_open: true
+    tty: true
