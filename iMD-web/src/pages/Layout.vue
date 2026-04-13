@@ -8,20 +8,6 @@
       @new-doc="doc => { current = doc; mode = 'edit' }"
       @jump="scrollTo" @import="importMd" @export="exportMd"
     />
-
-    <!-- 第2页：大纲（仅手机端） -->
-    <div class="mobile-outline-page" :class="{ 'mobile-page-hidden': mobilePage !== 'outline' }">
-      <div class="mobile-outline-list">
-        <div v-if="!headings.length" class="outline-empty" style="padding:24px;color:var(--text3)">无大纲，直接阅读</div>
-        <div v-for="h in headings" :key="h.id" :class="['mobile-outline-item', `lv${h.level}`]" @click="onOutlineClick(h)">{{ h.text }}</div>
-        <div class="mobile-outline-read" @click="navTo('main')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          直接阅读全文
-        </div>
-      </div>
-    </div>
-
-    <!-- 第3页：内容 -->
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <template v-if="current">
         <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" @edit="mode = 'edit'" />
@@ -50,8 +36,7 @@ const sidebarCollapsed = ref(false)
 const mobilePage = ref('sidebar')
 const sidebarRef = ref(null)
 
-// ─── 导航 ─────────────────────────────────────────────────
-
+// ─── 手机端导航（两页）────────────────────────────────────
 function navTo(page) {
   history.pushState({ page }, '')
   mobilePage.value = page
@@ -60,17 +45,15 @@ function navTo(page) {
 
 function onPopState(e) {
   const page = e.state?.page
-  if (page === 'sidebar' || page === 'outline' || page === 'main') {
+  if (page === 'sidebar' || page === 'main') {
     mobilePage.value = page
     localStorage.setItem('imk_mobile_page', page)
   } else {
-    // 退到应用外，补回当前页防止离开
     history.pushState({ page: mobilePage.value }, '')
   }
 }
 
 // ─── 生命周期 ─────────────────────────────────────────────
-
 onMounted(async () => {
   history.replaceState({ page: 'sidebar' }, '')
   window.addEventListener('popstate', onPopState)
@@ -83,33 +66,22 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
-  // 恢复上次页面（仅手机端且有文档）
   if (window.innerWidth <= 768 && current.value) {
     const saved = localStorage.getItem('imk_mobile_page')
-    if (saved && ['outline', 'main'].includes(saved)) {
-      mobilePage.value = saved
-    }
+    if (saved === 'main') mobilePage.value = 'main'
   }
 })
-
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
 // ─── 文档交互 ─────────────────────────────────────────────
-
 function onSelect(doc) {
   current.value = doc
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
-  if (window.innerWidth <= 768) navTo('outline')
-}
-
-function onOutlineClick(h) {
-  navTo('main')
-  setTimeout(() => scrollTo(h.id), 100)
+  if (window.innerWidth <= 768) navTo('main')
 }
 
 // ─── 计算属性 ─────────────────────────────────────────────
-
 const headings = computed(() => {
   if (!current.value?.content) return []
   return [...current.value.content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map(m => ({
@@ -130,18 +102,9 @@ const outlineTree = computed(() => {
   return root
 })
 
-// ─── 工具函数 ─────────────────────────────────────────────
-
 function scrollTo(id) {
   const heading = headings.value.find(h => h.id === id)
   if (!heading) return
-  if (mode.value === 'edit') {
-    const el = document.querySelector('.md-editor .cm-scroller, .md-editor textarea')
-    if (!el) return
-    const idx = (current.value?.content||'').split('\n').findIndex(l => l.replace(/^#+\s*/,'').trim() === heading.text)
-    if (idx >= 0) el.scrollTop = idx * 20
-    return
-  }
   const el = [...document.querySelectorAll('.md-wrap h1,.md-wrap h2,.md-wrap h3')].find(h => h.textContent.trim() === heading.text)
   if (!el) return
   document.querySelectorAll('.md-wrap details').forEach(d => { d.open = false })
@@ -155,36 +118,24 @@ async function onSave(content) {
   mode.value = 'view'
   await api.updateDoc(current.value.id, { content }).catch(() => {})
 }
-
-function logout() {
-  localStorage.removeItem('imk_token')
-  router.push('/login')
-}
-
+function logout() { localStorage.removeItem('imk_token'); router.push('/login') }
 async function importMd() {
   const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.md,.zip'
+  input.type = 'file'; input.accept = '.md,.zip'
   input.onchange = async e => {
-    const file = e.target.files[0]
-    if (!file) return
+    const file = e.target.files[0]; if (!file) return
     const res = await api.importFile(file)
     if (res?.docs) docs.value = res.docs
   }
   input.click()
 }
-
 async function exportMd() {
   const zip = new JSZip()
-  docs.value.forEach(g => {
-    const f = zip.folder(g.title)
-    g.children?.forEach(d => f.file(`${d.title}.md`, d.content || ''))
-  })
+  docs.value.forEach(g => { const f = zip.folder(g.title); g.children?.forEach(d => f.file(`${d.title}.md`, d.content || '')) })
   const blob = await zip.generateAsync({ type: 'blob' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
   a.download = `iMD-导出-${new Date().toISOString().slice(0, 10)}.zip`
-  a.click()
-  URL.revokeObjectURL(a.href)
+  a.click(); URL.revokeObjectURL(a.href)
 }
 </script>

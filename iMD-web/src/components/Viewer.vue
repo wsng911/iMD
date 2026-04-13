@@ -10,6 +10,18 @@
     <div class="md-wrap" ref="mdWrap" @click="handleClick" @dblclick="handleDblClick">
       <MdPreview :modelValue="content" :theme="settings.theme" :showCodeRowNumber="true" />
     </div>
+
+    <!-- 手机端大纲抽屉 -->
+    <template v-if="headings.length">
+      <button class="outline-fab" @click="drawerOpen = true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="12" y2="18"/></svg>
+      </button>
+      <div class="outline-drawer-mask" v-if="drawerOpen" @click="drawerOpen = false" />
+      <div class="outline-drawer" :class="{ open: drawerOpen }">
+        <div class="outline-drawer-title">大纲</div>
+        <div v-for="h in headings" :key="h.id" :class="['outline-drawer-item', `lv${h.level}`]" @click="jumpTo(h); drawerOpen = false">{{ h.text }}</div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -17,12 +29,30 @@
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
 import { settings } from '../useSettings.js'
-import { ref, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 
 const props = defineProps({ content: String, title: String })
 defineEmits(['edit'])
 
 const mdWrap = ref(null)
+const drawerOpen = ref(false)
+
+const headings = computed(() => {
+  if (!props.content) return []
+  return [...props.content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map(m => ({
+    level: m[1].length, text: m[2].trim(),
+    id: m[2].trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+  }))
+})
+
+function jumpTo(h) {
+  const el = [...(mdWrap.value?.querySelectorAll('h1,h2,h3') || [])].find(e => e.textContent.trim() === h.text)
+  if (!el) return
+  mdWrap.value.querySelectorAll('details').forEach(d => { d.open = false })
+  let next = el.nextElementSibling
+  while (next) { if (next.tagName === 'DETAILS') next.open = true; if (/^H[1-3]$/.test(next.tagName)) break; next = next.nextElementSibling }
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 // 渲染后默认折叠所有代码块
 watch(() => props.content, () => {
