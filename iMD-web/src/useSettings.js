@@ -2,8 +2,9 @@ import { reactive, watch } from 'vue'
 
 const DEFAULTS = {
   fontSize: 15,
-  theme: 'dark',       // dark | light
-  accent: 'purple',    // purple | teal | blue | rose
+  codeFontSize: 13,
+  theme: 'dark',
+  accent: 'purple',
 }
 
 // 后端接入
@@ -47,7 +48,7 @@ const ACCENTS = {
 function applyCSS() {
   const root = document.documentElement
   root.style.setProperty('--font-size', settings.fontSize + 'px')
-  // 支持预设 key 或直接 hex
+  root.style.setProperty('--code-font-size', settings.codeFontSize + 'px')
   const color = ACCENTS[settings.accent] || settings.accent
   root.style.setProperty('--accent', color)
   root.dataset.theme = settings.theme

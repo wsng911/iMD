@@ -90,14 +90,59 @@
         <span class="footer-label">大小</span>
         <span class="footer-info">{{ dataSize }}</span>
       </div>
+
+      <!-- 设置面板 -->
+      <div v-if="showSettings" class="settings-panel">
+        <div class="settings-row">
+          <span class="settings-label">正文</span>
+          <div class="settings-stepper">
+            <button @click="settings.fontSize = Math.max(12, settings.fontSize - 1); persistSettings()">-</button>
+            <span>{{ settings.fontSize }}</span>
+            <button @click="settings.fontSize = Math.min(22, settings.fontSize + 1); persistSettings()">+</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">代码</span>
+          <div class="settings-stepper">
+            <button @click="settings.codeFontSize = Math.max(10, settings.codeFontSize - 1); persistSettings()">-</button>
+            <span>{{ settings.codeFontSize }}</span>
+            <button @click="settings.codeFontSize = Math.min(20, settings.codeFontSize + 1); persistSettings()">+</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">配色</span>
+          <input type="color" :value="accentColor" @input="setAccent" class="color-picker-round" />
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">主题</span>
+          <button class="settings-btn" @click="toggleTheme">{{ settings.theme === 'dark' ? '🌙 暗色' : '☀️ 亮色' }}</button>
+        </div>
+        <div class="settings-row">
+          <span class="settings-label">密码</span>
+          <button class="settings-btn" @click="showPwd = !showPwd">修改密码</button>
+        </div>
+        <div v-if="showPwd" class="pwd-fields">
+          <input v-model="pwd.old" type="password" placeholder="当前密码" />
+          <input v-model="pwd.new1" type="password" placeholder="新密码" />
+          <input v-model="pwd.new2" type="password" placeholder="确认新密码" />
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="settings-btn" @click="changePwd">确认</button>
+            <span v-if="pwdMsg" :class="['pwd-msg', pwdMsg.ok ? 'ok' : 'err']">{{ pwdMsg.text }}</span>
+          </div>
+        </div>
+      </div>
+
       <div class="footer-actions">
+        <button class="footer-icon-btn" title="设置" @click="showSettings = !showSettings">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </button>
         <button class="footer-icon-btn" @click="$emit('import')" title="导入">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </button>
         <button class="footer-icon-btn" @click="$emit('export')" title="导出">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <span class="version-tag">v1.2</span>
+        <span class="version-tag">v1.2.1</span>
         <button class="logout-btn" @click="$emit('logout')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           退出
@@ -110,6 +155,8 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import Sortable from 'sortablejs'
+import { settings, persistSettings } from '../useSettings.js'
+import { api } from '../api.js'
 
 const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
 const emit = defineEmits(['select', 'toggle', 'logout', 'update:docs', 'new-doc', 'jump', 'import', 'export'])
@@ -254,4 +301,23 @@ const dataSize = computed(() => {
   const bytes = new Blob([JSON.stringify(props.docs)]).size
   return bytes < 1024 ? bytes + ' B' : (bytes / 1024).toFixed(1) + ' KB'
 })
+
+// 设置面板
+const showSettings = ref(false)
+const showPwd = ref(false)
+const pwd = ref({ old: '', new1: '', new2: '' })
+const pwdMsg = ref(null)
+
+const ACCENTS = { purple:'#cba6f7', teal:'#94e2d5', blue:'#89b4fa', rose:'#f38ba8' }
+const accentColor = computed(() => ACCENTS[settings.accent] || settings.accent)
+function setAccent(e) { settings.accent = e.target.value; persistSettings() }
+function toggleTheme() { settings.theme = settings.theme === 'dark' ? 'light' : 'dark'; persistSettings() }
+async function changePwd() {
+  if (pwd.value.new1 !== pwd.value.new2) { pwdMsg.value = { ok: false, text: '两次密码不一致' }; return }
+  try {
+    await api.changePassword({ oldPassword: pwd.value.old, newPassword: pwd.value.new1 })
+    pwdMsg.value = { ok: true, text: '修改成功' }
+    pwd.value = { old: '', new1: '', new2: '' }
+  } catch(e) { pwdMsg.value = { ok: false, text: e?.error || '修改失败' } }
+}
 </script>
