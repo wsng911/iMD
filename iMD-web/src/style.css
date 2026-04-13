@@ -99,11 +99,11 @@ body.dark { background: var(--bg); }
 .toggle-btn:hover { color: var(--text); background: var(--bg3); }
 .mobile-menu-btn { display: none; position: fixed; top: 10px; left: 10px; z-index: 400; background: var(--bg2); border: none; border-radius: 8px; padding: 8px; cursor: pointer; color: var(--text3); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 .tree { padding: 8px 0; overflow-y: auto; min-height: 0; flex: 1; }
-.group-title { display: flex; align-items: center; gap: 6px; padding: 9px 16px; margin: 2px 0 2px 0; border-radius: 0 24px 24px 0; font-size: calc(var(--font-size) + 1px); font-weight: 600; color: var(--text2); cursor: pointer; user-select: none; flex-wrap: nowrap; overflow: hidden; }
+.group-title { display: flex; align-items: center; gap: 6px; padding: 9px 16px; margin: 2px 0 2px 0; border-radius: 0 24px 24px 0; font-size: 12px; font-weight: 600; color: var(--text2); cursor: pointer; user-select: none; flex-wrap: nowrap; overflow: hidden; }
 .group-title:hover { background: var(--bg3); }
 .group-title .fold-icon { flex-shrink: 0; }
 .group-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
-.item { display: flex; align-items: center; gap: 6px; padding: 8px 16px 8px 36px; margin: 2px 8px; border-radius: 0 24px 24px 0; font-size: calc(var(--font-size) + 1px); color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item { display: flex; align-items: center; gap: 6px; padding: 8px 16px 8px 36px; margin: 2px 8px; border-radius: 0 24px 24px 0; font-size: 12px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .item:hover { background: var(--bg3); }
 .item.active { background: var(--accent-bg, var(--bg3)); color: var(--accent); font-weight: 600; }
 .item.selected, .group-title.selected { background: var(--bg3); }
