@@ -1,4 +1,4 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body, #app { height: 100%; width: 100%; overflow-x: hidden; }
 html { height: -webkit-fill-available; }
 body { min-height: -webkit-fill-available; }
@@ -90,13 +90,13 @@ body.dark { background: var(--bg); }
 .sidebar.collapsed .sidebar-footer { display: none; }
 .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px; min-height: 48px; }
 .header-actions { display: flex; gap: 4px; margin-left: auto; margin-right: 6px; }
-.icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; }
+.icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; width: 28px; height: 28px; justify-content: center; }
 .icon-btn:hover { background: var(--bg3); color: var(--text); }
 .ctx-item.danger { color: #f38ba8; }
 .sidebar .logo { font-size: 16px; font-weight: 700; color: var(--accent); }
-.toggle-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 8px; display: flex; align-items: center; }
-.toggle-btn svg { width: 22px; height: 22px; }
-.toggle-btn:hover { color: var(--text); }
+.toggle-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; display: flex; align-items: center; border-radius: 6px; }
+.toggle-btn svg { width: 20px; height: 20px; }
+.toggle-btn:hover { color: var(--text); background: var(--bg3); }
 .mobile-menu-btn { display: none; position: fixed; top: 10px; left: 10px; z-index: 400; background: var(--bg2); border: none; border-radius: 8px; padding: 8px; cursor: pointer; color: var(--text3); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 .tree { padding: 8px 0; overflow-y: auto; min-height: 0; flex: 1; }
 .group-title { display: flex; align-items: center; gap: 6px; padding: 9px 16px; margin: 2px 0 2px 0; border-radius: 0 24px 24px 0; font-size: calc(var(--font-size) + 1px); font-weight: 600; color: var(--text2); cursor: pointer; user-select: none; flex-wrap: nowrap; overflow: hidden; }
@@ -130,7 +130,7 @@ body.dark { background: var(--bg); }
 .outline-page-item:hover { background: var(--bg3); color: var(--accent); }
 .outline-empty { padding: 20px 16px; color: var(--text3); font-size: 13px; }
 .pin-badge { font-size: 10px; }
-.del-btn { margin-left: 2px; background: none; border: none; color: var(--text3); cursor: pointer; padding: 3px; display: flex; align-items: center; flex-shrink: 0; }
+.del-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 4px; border-radius: 4px; display: flex; align-items: center; flex-shrink: 0; width: 20px; height: 20px; justify-content: center; }
 .del-btn:hover { color: #f38ba8; }
 .group-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; }
 .rename-input { flex: 1; background: var(--bg); border: 1px solid var(--accent); border-radius: 4px; padding: 1px 6px; color: var(--text); font-size: var(--font-size); outline: none; min-width: 0; }
@@ -173,7 +173,7 @@ body.dark { background: var(--bg); }
 .footer-label { font-size: calc(var(--font-size) - 3px); color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
 .footer-info { font-size: calc(var(--font-size) - 2px); color: var(--text2); text-align: right; }
 .footer-actions { display: flex; align-items: center; gap: 4px; padding-top: 6px; }
-.footer-icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; }
+.footer-icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
 .footer-icon-btn:hover { background: var(--bg3); color: var(--text); }
 .version-tag { font-size: 11px; color: var(--text3); margin: 0 4px; }
 .logout-btn { display: flex; align-items: center; justify-content: flex-end; gap: 6px; background: none; border: none; color: var(--text3); cursor: pointer; font-size: var(--font-size); padding: 4px 0; margin-top: 2px; width: 100%; margin-left: auto; }
