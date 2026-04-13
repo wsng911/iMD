@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <Sidebar
+    <Sidebar ref="sidebarRef"
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
       @select="onMobileSelect" @toggle="sidebarCollapsed = !sidebarCollapsed"
@@ -50,18 +50,22 @@ const mode = ref('view')
 const sidebarCollapsed = ref(false)
 const mobilePage = ref('sidebar')
 
+const sidebarRef = ref(null)
+
 function pushPage(page) {
   history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
 function goBack() {
+  if (sidebarRef.value?.handleBack()) return
   if (mobilePage.value === 'main') { pushPage('outline'); return }
   if (mobilePage.value === 'outline') { pushPage('sidebar'); return }
 }
 function goMain() { pushPage('main') }
 
 function onPopState() {
+  if (sidebarRef.value?.handleBack()) { history.pushState({ page: mobilePage.value }, ''); return }
   if (window.innerWidth > 768) return
   const page = history.state?.page || 'sidebar'
   mobilePage.value = page
