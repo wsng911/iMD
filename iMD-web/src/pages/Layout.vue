@@ -11,12 +11,6 @@
 
     <!-- 第2页：大纲（仅手机端） -->
     <div class="mobile-outline-page" :class="{ 'mobile-page-hidden': mobilePage !== 'outline' }">
-      <div class="mobile-topbar" @click="goBack()">
-        <div class="mobile-topbar-back">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
-        <span class="mobile-topbar-title">{{ current?.title || '' }}</span>
-      </div>
       <div class="mobile-outline-list">
         <div v-if="!headings.length" class="outline-empty" style="padding:24px;color:var(--text3)">无大纲，直接阅读</div>
         <div v-for="h in headings" :key="h.id" :class="['mobile-outline-item', `lv${h.level}`]" @click="onOutlineClick(h)">{{ h.text }}</div>
@@ -29,12 +23,6 @@
 
     <!-- 第3页：内容 -->
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
-      <div class="mobile-topbar" @click="goBack()">
-        <div class="mobile-topbar-back">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
-        <span class="mobile-topbar-title">{{ current?.title || '' }}</span>
-      </div>
       <template v-if="current">
         <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" @edit="mode = 'edit'" />
         <Editor v-else :content="current.content" @save="onSave" @cancel="mode = 'view'" @update:content="v => current.content = v" />
@@ -59,45 +47,35 @@ const docs = ref([])
 const current = ref(null)
 const mode = ref('view')
 const sidebarCollapsed = ref(false)
-const mobilePage = ref('sidebar') // sidebar | outline | main
+const mobilePage = ref('sidebar')
 const sidebarRef = ref(null)
 
-// ─── 手机端导航 ───────────────────────────────────────────
-// 不依赖 history.back()，topbar 和系统返回键都直接改 mobilePage
-// history 只用一条记录做"拦截器"，防止退出应用
+// ─── 导航 ─────────────────────────────────────────────────
 
 function navTo(page) {
+  history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
 
-let navLock = false
-function goBack() {
-  if (navLock) return
-  navLock = true
-  setTimeout(() => { navLock = false }, 300)
-  if (mobilePage.value === 'main') { navTo('outline'); return }
-  if (mobilePage.value === 'outline') { navTo('sidebar'); return }
-}
-
-function onPopState() {
-  // 拦截所有系统返回，立即补回一条记录，然后用 goBack 改状态
-  history.pushState({ page: 'app' }, '')
-  if (window.innerWidth <= 768) goBack()
-  else sidebarRef.value?.handleBack()
+function onPopState(e) {
+  const page = e.state?.page
+  if (page === 'sidebar' || page === 'outline' || page === 'main') {
+    mobilePage.value = page
+    localStorage.setItem('imk_mobile_page', page)
+  } else {
+    // 退到应用外，补回当前页防止离开
+    history.pushState({ page: mobilePage.value }, '')
+  }
 }
 
 // ─── 生命周期 ─────────────────────────────────────────────
 
 onMounted(async () => {
-  // push 一条拦截记录，系统返回时被 onPopState 捕获
-  history.pushState({ page: 'app' }, '')
+  history.replaceState({ page: 'sidebar' }, '')
   window.addEventListener('popstate', onPopState)
-
   loadSettings()
   docs.value = await api.getDocs()
-
-  // 恢复上次打开的文档
   const lastId = parseInt(localStorage.getItem('imk_last_doc'))
   if (lastId) {
     for (const g of docs.value) {
@@ -105,11 +83,10 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
-
-  // 手机端恢复上次所在页面
+  // 恢复上次页面（仅手机端且有文档）
   if (window.innerWidth <= 768 && current.value) {
     const saved = localStorage.getItem('imk_mobile_page')
-    if (saved && ['sidebar', 'outline', 'main'].includes(saved)) {
+    if (saved && ['outline', 'main'].includes(saved)) {
       mobilePage.value = saved
     }
   }
@@ -117,13 +94,12 @@ onMounted(async () => {
 
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
-// ─── 文档选择 ─────────────────────────────────────────────
+// ─── 文档交互 ─────────────────────────────────────────────
 
 function onSelect(doc) {
   current.value = doc
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
-  // 手机端：进入第2页大纲
   if (window.innerWidth <= 768) navTo('outline')
 }
 
