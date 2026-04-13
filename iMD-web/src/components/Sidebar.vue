@@ -81,7 +81,7 @@
     </div>
 
     <!-- 底部信息 -->
-    <div v-if="!collapsed" class="sidebar-footer">
+    <div class="sidebar-footer">
       <div class="footer-row">
         <span class="footer-label">时间</span>
         <span class="footer-info">{{ time }}</span>

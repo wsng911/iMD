@@ -11,6 +11,12 @@
 
     <!-- 第2页：大纲（仅手机端） -->
     <div class="mobile-outline-page" :class="{ 'mobile-page-hidden': mobilePage !== 'outline' }">
+      <div class="mobile-topbar">
+        <div class="mobile-topbar-back" @click="goBack">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <span class="mobile-topbar-title">{{ current?.title || '' }}</span>
+      </div>
       <div class="mobile-outline-list">
         <div v-if="!headings.length" class="outline-empty" style="padding:24px;color:var(--text3)">无大纲，直接阅读</div>
         <div v-for="h in headings" :key="h.id" :class="['mobile-outline-item', `lv${h.level}`]" @click="onOutlineClick(h)">{{ h.text }}</div>
@@ -63,9 +69,14 @@ function pushPage(page) {
   localStorage.setItem('imk_mobile_page', page)
 }
 function goBack() {
-  if (sidebarRef.value?.handleBack()) return
-  if (mobilePage.value === 'main') { pushPage('outline'); return }
-  if (mobilePage.value === 'outline') { pushPage('sidebar'); return }
+  if (window.innerWidth <= 768) {
+    // 手机端：只按 mobilePage 退
+    if (mobilePage.value === 'main') { pushPage('outline'); return }
+    if (mobilePage.value === 'outline') { pushPage('sidebar'); return }
+  } else {
+    // 桌面端：先退 sideView，再退 mobilePage
+    if (sidebarRef.value?.handleBack()) return
+  }
 }
 function goMain() { pushPage('main') }
 
