@@ -71,10 +71,13 @@ function navTo(page) {
   localStorage.setItem('imk_mobile_page', page)
 }
 
+let navLock = false
 function goBack() {
+  if (navLock) return
+  navLock = true
+  setTimeout(() => { navLock = false }, 300)
   if (mobilePage.value === 'main') { navTo('outline'); return }
   if (mobilePage.value === 'outline') { navTo('sidebar'); return }
-  // sidebar 页：什么都不做，停留在应用内
 }
 
 function onPopState() {
