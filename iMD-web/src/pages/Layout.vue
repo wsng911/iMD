@@ -51,11 +51,10 @@ import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
 import Viewer from '../components/Viewer.vue'
 import Editor from '../components/Editor.vue'
-import { settings, loadSettings, persistSettings } from '../useSettings.js'
+import { loadSettings } from '../useSettings.js'
 import { api } from '../api.js'
 
 const router = useRouter()
-const importRef = ref(null)
 const docs = ref([])
 const current = ref(null)
 const mode = ref('view')
@@ -65,26 +64,34 @@ const mobilePage = ref('sidebar')
 const sidebarRef = ref(null)
 
 function pushPage(page) {
+  history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
 function goBack() {
   if (window.innerWidth <= 768) {
-    if (mobilePage.value === 'main') { mobilePage.value = 'outline'; localStorage.setItem('imk_mobile_page', 'outline'); return }
-    if (mobilePage.value === 'outline') { mobilePage.value = 'sidebar'; localStorage.setItem('imk_mobile_page', 'sidebar'); return }
+    history.back()
   } else {
     if (sidebarRef.value?.handleBack()) return
   }
 }
 function goMain() { pushPage('main') }
 
-function onPopState() {
-  history.pushState(null, '')
-  goBack()
+function onPopState(e) {
+  if (window.innerWidth > 768) return
+  const page = e.state?.page
+  if (!page) {
+    history.pushState({ page: 'sidebar' }, '')
+    mobilePage.value = 'sidebar'
+    localStorage.setItem('imk_mobile_page', 'sidebar')
+    return
+  }
+  mobilePage.value = page
+  localStorage.setItem('imk_mobile_page', page)
 }
 
 onMounted(async () => {
-  history.pushState(null, '')
+  history.replaceState({ page: 'sidebar' }, '')
   window.addEventListener('popstate', onPopState)
   loadSettings()
   docs.value = await api.getDocs()
