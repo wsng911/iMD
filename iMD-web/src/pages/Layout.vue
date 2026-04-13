@@ -11,7 +11,7 @@
 
     <!-- 第2页：大纲（仅手机端） -->
     <div class="mobile-outline-page" :class="{ 'mobile-page-hidden': mobilePage !== 'outline' }">
-      <div class="mobile-topbar" @click="history.back()">
+      <div class="mobile-topbar" @click="goBack()">
         <div class="mobile-topbar-back">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
         </div>
@@ -29,7 +29,7 @@
 
     <!-- 第3页：内容 -->
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
-      <div class="mobile-topbar" @click="history.back()">
+      <div class="mobile-topbar" @click="goBack()">
         <div class="mobile-topbar-back">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
         </div>
@@ -63,38 +63,32 @@ const mobilePage = ref('sidebar') // sidebar | outline | main
 const sidebarRef = ref(null)
 
 // ─── 手机端导航 ───────────────────────────────────────────
-// 每次页面切换都 push 一条 history，系统返回键通过 popstate 恢复页面
+// 不依赖 history.back()，topbar 和系统返回键都直接改 mobilePage
+// history 只用一条记录做"拦截器"，防止退出应用
 
 function navTo(page) {
-  history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
 
-function onPopState(e) {
-  // 桌面端：交给 sideView 处理
-  if (window.innerWidth > 768) {
-    sidebarRef.value?.handleBack()
-    return
-  }
-  const page = e.state?.page
-  if (page === 'sidebar' || page === 'outline' || page === 'main') {
-    // 正常后退到已知页面
-    mobilePage.value = page
-    localStorage.setItem('imk_mobile_page', page)
-  } else {
-    // 退到了应用外（无 page state），补回 sidebar 防止退出
-    history.pushState({ page: 'sidebar' }, '')
-    mobilePage.value = 'sidebar'
-    localStorage.setItem('imk_mobile_page', 'sidebar')
-  }
+function goBack() {
+  if (mobilePage.value === 'main') { navTo('outline'); return }
+  if (mobilePage.value === 'outline') { navTo('sidebar'); return }
+  // sidebar 页：什么都不做，停留在应用内
+}
+
+function onPopState() {
+  // 拦截所有系统返回，立即补回一条记录，然后用 goBack 改状态
+  history.pushState({ page: 'app' }, '')
+  if (window.innerWidth <= 768) goBack()
+  else sidebarRef.value?.handleBack()
 }
 
 // ─── 生命周期 ─────────────────────────────────────────────
 
 onMounted(async () => {
-  // 用 replaceState 标记当前记录为 sidebar，不增加 history 条目
-  history.replaceState({ page: 'sidebar' }, '')
+  // push 一条拦截记录，系统返回时被 onPopState 捕获
+  history.pushState({ page: 'app' }, '')
   window.addEventListener('popstate', onPopState)
 
   loadSettings()
