@@ -23,6 +23,12 @@
 
     <!-- 第3页：内容 -->
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
+      <div class="mobile-topbar">
+        <div class="mobile-topbar-back" @click="goBack">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <span class="mobile-topbar-title">{{ current?.title || '' }}</span>
+      </div>
       <template v-if="current">
         <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" @edit="mode = 'edit'" />
         <Editor v-else :content="current.content" @save="onSave" @cancel="mode = 'view'" @update:content="v => current.content = v" />
@@ -53,7 +59,6 @@ const mobilePage = ref('sidebar')
 const sidebarRef = ref(null)
 
 function pushPage(page) {
-  history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
@@ -65,14 +70,13 @@ function goBack() {
 function goMain() { pushPage('main') }
 
 function onPopState() {
-  if (sidebarRef.value?.handleBack()) { history.pushState({ page: mobilePage.value }, ''); return }
-  if (window.innerWidth > 768) return
-  const page = history.state?.page || 'sidebar'
-  mobilePage.value = page
-  localStorage.setItem('imk_mobile_page', page)
+  // 拦截所有系统返回，交给 goBack 处理，阻止退出应用
+  history.pushState(null, '')
+  goBack()
 }
 
 onMounted(async () => {
+  history.pushState(null, '')
   window.addEventListener('popstate', onPopState)
   loadSettings()
   docs.value = await api.getDocs()
