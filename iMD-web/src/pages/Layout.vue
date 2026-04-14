@@ -1,12 +1,12 @@
 <template>
   <div class="layout">
     <Sidebar
-      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
+      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
       @select="onSelect" @toggle="sidebarCollapsed = !sidebarCollapsed"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
-      @jump="scrollTo" @import="importMd" @export="exportMd"
+      @import="importMd" @export="exportMd"
     />
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <template v-if="current">
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import JSZip from 'jszip'
 import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
@@ -78,38 +78,6 @@ function onSelect(doc) {
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
   if (window.innerWidth <= 768) navTo('main')
-}
-
-// ─── 计算属性 ─────────────────────────────────────────────
-const headings = computed(() => {
-  if (!current.value?.content) return []
-  return [...current.value.content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map(m => ({
-    level: m[1].length, text: m[2].trim(),
-    id: m[2].trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
-  }))
-})
-
-const outlineTree = computed(() => {
-  const root = [], stack = []
-  headings.value.forEach(h => {
-    const node = { ...h, children: [] }
-    while (stack.length && stack[stack.length-1].level >= h.level) stack.pop()
-    if (stack.length) stack[stack.length-1].children.push(node)
-    else root.push(node)
-    stack.push(node)
-  })
-  return root
-})
-
-function scrollTo(id) {
-  const heading = headings.value.find(h => h.id === id)
-  if (!heading) return
-  const el = [...document.querySelectorAll('.md-wrap h1,.md-wrap h2,.md-wrap h3')].find(h => h.textContent.trim() === heading.text)
-  if (!el) return
-  document.querySelectorAll('.md-wrap details').forEach(d => { d.open = false })
-  let next = el.nextElementSibling
-  while (next) { if (next.tagName==='DETAILS') next.open=true; if (/^H[1-3]$/.test(next.tagName)) break; next=next.nextElementSibling }
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 async function onSave(content) {

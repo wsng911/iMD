@@ -50,11 +50,6 @@
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
                 </button>
               </div>
-              <template v-if="openDocOutlines.has(doc.id) && active === doc.id">
-                <div v-for="h in headings" :key="h.id" :class="['doc-outline-item', `lv${h.level}`]" @click="$emit('jump', h.id)">
-                  <span class="outline-dot"></span>{{ h.text }}
-                </div>
-              </template>
             </template>
             <div v-if="newDocInput === group.id" class="inline-input-row sub">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -128,7 +123,7 @@
         <button class="footer-icon-btn" @click="$emit('export')" title="导出">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <span class="version-tag">v1.2.7</span>
+        <span class="version-tag">v1.2.8</span>
         <button class="logout-btn" @click="$emit('logout')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           退出
@@ -144,13 +139,12 @@ import Sortable from 'sortablejs'
 import { settings, persistSettings } from '../useSettings.js'
 import { api } from '../api.js'
 
-const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
-const emit = defineEmits(['select', 'toggle', 'logout', 'update:docs', 'new-doc', 'jump', 'import', 'export'])
+const props = defineProps({ docs: Array, active: Number, collapsed: Boolean })
+const emit = defineEmits(['select', 'toggle', 'logout', 'update:docs', 'new-doc', 'import', 'export'])
 
 const sortedDocs = computed(() => props.docs.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)))
 
 const openGroups = ref(new Set(props.docs.map(g => g.id)))
-const openDocOutlines = ref(new Set())
 const sidebarRef = ref(null)
 
 function toggleGroup(id) {
@@ -164,9 +158,6 @@ function onDocClick(doc) {
     clickTimer = null
     selectItem(doc.id)
     emit('select', doc)
-    sideView.value = 'outline'
-    localStorage.setItem('imk_side_view', 'outline')
-    activeDoc.value = doc
   }, window.innerWidth <= 768 ? 0 : 220)
 }
 function onDocDblClick(doc) {
