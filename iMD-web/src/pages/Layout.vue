@@ -3,7 +3,7 @@
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
-      @select="onSelect" @toggle="sidebarCollapsed = !sidebarCollapsed"
+      @select="onSelect" @toggle="if(window.innerWidth > 768) sidebarCollapsed = !sidebarCollapsed"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
       @import="importMd" @export="exportMd"

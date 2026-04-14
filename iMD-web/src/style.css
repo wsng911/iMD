@@ -284,12 +284,12 @@ body.dark { background: var(--bg); }
   .sidebar { width: 100% !important; height: 100dvh; max-height: 100dvh; overflow-y: auto; }
   main { width: 100% !important; height: 100dvh; display: flex; flex-direction: column; }
   .viewer-scroll { padding: 16px 16px 32px !important; }
-  .outline-fab { display: none !important; }
-  .outline-drawer { display: none !important; }
-  .outline-drawer-mask { display: none !important; }
-  .viewer-toolbar { margin-top: 10px; }
   .back-home-btn { display: flex; align-items: center; justify-content: center; background: var(--bg3); border: none; color: var(--text2); cursor: pointer; padding: 6px 10px; border-radius: 6px; font-size: var(--font-size); }
   .back-home-btn:hover { background: var(--bg4); }
+  .outline-fab { width: 44px !important; height: 44px !important; right: 10vw !important; bottom: 10% !important; border-radius: 50% !important; opacity: 0.85; }
+  .outline-drawer { right: -34vw; width: 33vw !important; height: auto !important; top: 10dvh !important; bottom: auto !important; max-height: 70dvh !important; border-radius: 8px 0 0 8px !important; }
+  .outline-drawer.open { right: 0; }
+  .toggle-btn { display: none !important; }
 
 }
 @media (min-width: 769px) {
