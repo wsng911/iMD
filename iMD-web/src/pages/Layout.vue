@@ -3,7 +3,7 @@
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
-      @select="onSelect" @toggle="if(window.innerWidth > 768) sidebarCollapsed = !sidebarCollapsed"
+      @select="onSelect" @toggle="onToggle"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
       @import="importMd" @export="exportMd"
@@ -73,6 +73,7 @@ onMounted(async () => {
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
 // ─── 文档交互 ─────────────────────────────────────────────
+function onToggle() { if (window.innerWidth > 768) sidebarCollapsed.value = !sidebarCollapsed.value }
 function onSelect(doc) {
   current.value = doc
   mode.value = 'view'
