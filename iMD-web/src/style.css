@@ -299,6 +299,7 @@ body.dark { background: var(--bg); }
 }
 @media (min-width: 769px) {
   .mobile-back-btn { display: none !important; }
+  .outline-fab { width: 32px !important; height: 36px !important; right: 0 !important; bottom: 20% !important; border-radius: 6px 0 0 6px !important; opacity: 0.6; }
   .outline-drawer { right: -260px !important; width: 260px !important; height: 100dvh !important; top: 0 !important; bottom: auto !important; max-height: none !important; border-radius: 0 !important; }
   .outline-drawer.open { right: 0 !important; }
 }
