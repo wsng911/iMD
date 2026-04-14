@@ -278,9 +278,8 @@ body.dark { background: var(--bg); }
   .viewer-scroll { padding: 16px 16px 32px !important; }
   .back-home-btn { display: flex; align-items: center; justify-content: center; background: var(--bg3); border: none; color: var(--text2); cursor: pointer; padding: 6px 10px; border-radius: 6px; font-size: var(--font-size); }
   .back-home-btn:hover { background: var(--bg4); }
-  .outline-fab { width: 44px !important; height: 44px !important; right: 80px !important; border-radius: 50% !important; bottom: 20% !important; }
-  /* 抽屉顶部与 fab 对齐，向下扩展，最多到 fab 上方一个身位 */
-  .outline-drawer { right: -34vw; width: 33vw !important; height: auto !important; top: auto !important; bottom: calc(20% + 44px) !important; max-height: calc(80dvh - 20% - 88px) !important; border-radius: 8px 0 0 8px !important; }
+  .outline-fab { width: 52px !important; height: 52px !important; right: 10vw !important; bottom: 10% !important; border-radius: 50% !important; }
+  .outline-drawer { right: -34vw; width: 33vw !important; height: auto !important; top: 10dvh !important; bottom: auto !important; max-height: 70dvh !important; border-radius: 8px 0 0 8px !important; }
   .outline-drawer.open { right: 0; }
   .outline-drawer-mask { display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199998; }
   .outline-drawer-title { padding: 16px 20px; font-size: 13px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); flex-shrink: 0; }
