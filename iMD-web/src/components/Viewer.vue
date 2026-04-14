@@ -44,9 +44,8 @@ const drawerOpen = ref(false)
 
 const headings = computed(() => {
   if (!props.content) return []
-  return [...props.content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map(m => ({
-    level: m[1].length, text: m[2].trim(),
-    id: m[2].trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+  return [...props.content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map((m, i) => ({
+    level: m[1].length, text: m[2].trim(), id: i
   }))
 })
 
