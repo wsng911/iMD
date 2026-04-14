@@ -100,6 +100,8 @@ body.dark { background: var(--bg); }
 .sidebar.collapsed .settings-panel { display: none; }
 .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px; min-height: 48px; }
 .header-actions { display: flex; gap: 4px; margin-left: auto; margin-right: 6px; }
+.header-actions .icon-btn { width: 28px; height: 28px; }
+.header-actions .icon-btn svg { width: 16px !important; height: 16px !important; }
 .icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; width: 56px; height: 56px; justify-content: center; }
 .icon-btn svg { width: 28px; height: 28px; }
 .icon-btn:hover { background: var(--bg3); color: var(--text); }
@@ -115,9 +117,9 @@ body.dark { background: var(--bg); }
 .group-title .fold-icon { flex-shrink: 0; }
 .group-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
 .group-actions .icon-btn { width: 17px !important; height: 17px !important; padding: 2px !important; }
-.group-actions .icon-btn svg { width: 11px !important; height: 11px !important; }
+.group-actions .icon-btn svg { width: 13px !important; height: 13px !important; }
 .group-actions .del-btn { width: 17px !important; height: 17px !important; padding: 2px !important; }
-.group-actions .del-btn svg { width: 11px !important; height: 11px !important; }
+.group-actions .del-btn svg { width: 13px !important; height: 13px !important; }
 .item { display: flex; align-items: center; gap: 6px; padding: 4px 16px 4px 36px; margin: 1px 8px; border-radius: 0 24px 24px 0; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
 /* Tree 连接线 */
 .group-items { position: relative; padding-left: 0; }
@@ -195,11 +197,11 @@ body.dark { background: var(--bg); }
 .footer-info { font-size: calc(var(--font-size) - 2px); color: var(--text2); text-align: right; }
 .footer-actions { display: flex; align-items: center; gap: 4px; padding-top: 6px; }
 .footer-icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; }
-.footer-icon-btn svg { width: 18px; height: 18px; }
+.footer-icon-btn svg { width: 16px; height: 16px; }
 .footer-icon-btn:hover { background: var(--bg3); color: var(--text); }
-.version-tag { font-size: 16px; color: var(--text3); margin: 0 4px; }
-.logout-btn { display: flex; align-items: center; justify-content: flex-end; gap: 6px; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 4px 0; margin-top: 2px; width: 100%; margin-left: auto; }
-.logout-btn svg { width: 22px; height: 22px; }
+.version-tag { font-size: 12px; color: var(--text3); margin: 0 4px; }
+.logout-btn { display: flex; align-items: center; justify-content: flex-end; gap: 6px; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 12px; padding: 4px 0; margin-top: 2px; width: 100%; margin-left: auto; }
+.logout-btn svg { width: 16px; height: 16px; }
 .logout-btn:hover { color: #f38ba8; }
 
 /* ── Viewer ── */
@@ -219,11 +221,11 @@ body.dark { background: var(--bg); }
 .md-editor-preview, .md-editor-preview p, .md-editor-preview li { font-size: var(--font-size) !important; }
 .md-editor .cm-content, .md-editor .cm-line { font-size: var(--font-size) !important; }
 .md-wrap pre, .md-wrap code, .md-wrap .hljs { font-size: var(--code-font-size, 13px) !important; }
-.viewer-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 20px; }
+.viewer-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 20px; background: transparent; padding: 0 20px; }
 .viewer-toolbar .doc-name { display: none; }
 .viewer-toolbar .toolbar-actions { display: flex; gap: 8px; }
-.viewer-toolbar button { background: var(--bg3); border: none; color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: var(--font-size); display: flex; align-items: center; gap: 4px; }
-.viewer-toolbar button:hover { background: var(--bg4); }
+.viewer-toolbar button { background: transparent; border: none; color: var(--text2); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: var(--font-size); display: flex; align-items: center; gap: 4px; }
+.viewer-toolbar button:hover { background: var(--bg3); color: var(--text); }
 
 .md-wrap { flex: 1; overflow-y: auto; }
 .md-wrap p, .md-wrap li { cursor: pointer; }
