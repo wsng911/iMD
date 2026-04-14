@@ -7,20 +7,21 @@
         编辑
       </button>
     </div>
-    <div class="viewer-scroll">
-      <div class="md-wrap" ref="mdWrap" @click="handleClick" @dblclick="handleDblClick">
-        <MdPreview :modelValue="content" :theme="settings.theme" :showCodeRowNumber="true" />
+    <div class="viewer-body">
+      <!-- 大纲抽屉（桌面端撑开布局，手机端覆盖） -->
+      <div class="outline-drawer" :class="{ open: drawerOpen }">
+        <div class="outline-drawer-title">大纲</div>
+        <div v-for="h in headings" :key="h.id" :class="['outline-drawer-item', `lv${h.level}`]" @click="jumpTo(h); drawerOpen = false">{{ h.text }}</div>
       </div>
-      <template v-if="headings.length">
-        <button class="outline-fab" @click="drawerOpen = true">
+      <div class="outline-drawer-mask" v-if="drawerOpen" @click="drawerOpen = false" />
+      <div class="viewer-scroll">
+        <div class="md-wrap" ref="mdWrap" @click="handleClick" @dblclick="handleDblClick">
+          <MdPreview :modelValue="content" :theme="settings.theme" :showCodeRowNumber="true" />
+        </div>
+        <button v-if="headings.length" class="outline-fab" @click="drawerOpen = !drawerOpen">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="12" y2="18"/></svg>
         </button>
-        <div class="outline-drawer-mask" v-if="drawerOpen" @click="drawerOpen = false" />
-        <div class="outline-drawer" :class="{ open: drawerOpen }">
-          <div class="outline-drawer-title">大纲</div>
-          <div v-for="h in headings" :key="h.id" :class="['outline-drawer-item', `lv${h.level}`]" @click="jumpTo(h); drawerOpen = false">{{ h.text }}</div>
-        </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>
