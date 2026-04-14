@@ -134,7 +134,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import Sortable from 'sortablejs'
 import { settings, persistSettings } from '../useSettings.js'
 import { api } from '../api.js'
