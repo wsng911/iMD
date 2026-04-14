@@ -10,7 +10,7 @@
     />
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <template v-if="current">
-        <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" @edit="mode = 'edit'" />
+        <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" @edit="mode = 'edit'" @back="navTo('sidebar')" />
         <Editor v-else :content="current.content" @save="onSave" @cancel="mode = 'view'" @update:content="v => current.content = v" />
       </template>
       <div v-else class="empty">← 选择文档</div>
