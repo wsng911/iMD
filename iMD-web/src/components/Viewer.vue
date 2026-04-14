@@ -16,7 +16,7 @@
       </div>
       <template v-if="headings.length">
         <!-- fab 固定在右侧 -->
-        <button class="outline-fab" :class="{ open: drawerOpen }" @click="drawerOpen = !drawerOpen">
+        <button class="outline-fab" :class="{ open: drawerOpen, 'fab-hidden': props.mobilePage === 'sidebar' }" @click="drawerOpen = !drawerOpen">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="12" y2="18"/></svg>
         </button>
         <!-- 抽屉从右侧向左弹出 -->
@@ -36,7 +36,7 @@ import 'md-editor-v3/lib/preview.css'
 import { settings } from '../useSettings.js'
 import { ref, computed, watch, nextTick } from 'vue'
 
-const props = defineProps({ content: String, title: String })
+const props = defineProps({ content: String, title: String, mobilePage: String })
 defineEmits(['edit', 'back'])
 
 const mdWrap = ref(null)
