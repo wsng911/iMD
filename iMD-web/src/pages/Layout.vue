@@ -1,6 +1,6 @@
 <template>
   <div class="layout">
-    <Sidebar ref="sidebarRef"
+    <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed" :outlineTree="outlineTree" :headings="headings"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
       @select="onSelect" @toggle="sidebarCollapsed = !sidebarCollapsed"
@@ -34,7 +34,6 @@ const current = ref(null)
 const mode = ref('view')
 const sidebarCollapsed = ref(false)
 const mobilePage = ref('sidebar')
-const sidebarRef = ref(null)
 
 // ─── 手机端导航（两页）────────────────────────────────────
 function navTo(page) {

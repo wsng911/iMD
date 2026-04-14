@@ -52,7 +52,18 @@ body.dark { background: var(--bg); }
 .outline-title { font-size: calc(var(--font-size) - 2px); color: var(--text3); padding: 6px 14px 4px; text-transform: uppercase; letter-spacing: .05em; flex-shrink: 0; border-bottom: 1px solid var(--border); }
 .outline-scroll { flex: 1; overflow-y: auto; }
 .mobile-outline-page { display: none; }
-.outline-fab { display: none; }.outline-item { display: flex; align-items: center; padding: 2px 10px; cursor: pointer; user-select: none; }
+.outline-fab { display: flex; }
+.outline-fab { position: absolute; bottom: 24px; left: 16px; z-index: 10; width: 36px; height: 36px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.outline-fab:hover { background: var(--bg4); color: var(--text); }
+.outline-drawer-mask { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 20; }
+.outline-drawer { position: absolute; top: 0; left: 0; bottom: 0; width: 220px; background: var(--bg2); z-index: 21; transform: translateX(-100%); transition: transform .25s ease; overflow-y: auto; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+.outline-drawer.open { transform: translateX(0); }
+.outline-drawer-title { padding: 12px 16px; font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.outline-drawer-item { padding: 8px 16px; font-size: 13px; color: var(--text2); cursor: pointer; }
+.outline-drawer-item:hover { background: var(--bg3); color: var(--text); }
+.outline-drawer-item.lv1 { font-weight: 600; color: var(--text); }
+.outline-drawer-item.lv2 { padding-left: 28px; }
+.outline-drawer-item.lv3 { padding-left: 40px; font-size: 12px; color: var(--text3); }.outline-item { display: flex; align-items: center; padding: 2px 10px; cursor: pointer; user-select: none; }
 .outline-item:hover .outline-text, .outline-item.active .outline-text { color: var(--accent); }
 .outline-prefix { font-family: monospace; color: var(--text3); white-space: pre; font-size: calc(var(--font-size) - 1px); flex-shrink: 0; }
 .outline-text { font-size: calc(var(--font-size) - 1px); color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
@@ -178,7 +189,7 @@ body.dark { background: var(--bg); }
 .logout-btn:hover { color: #f38ba8; }
 
 /* ── Viewer ── */
-.viewer { flex: 1; padding: 64px 48px 32px; overflow-y: auto; min-height: 0; }
+.viewer { flex: 1; padding: 64px 48px 32px; overflow-y: auto; min-height: 0; position: relative; }
 /* 隐藏代码块折叠时的复制按钮 */
 .md-editor-preview details.md-editor-code:not([open]) .md-editor-copy-button { display: none; }
 /* 折叠区块和代码块工具栏跟随主题，内容区保持 hljs 原生背景 */
@@ -254,12 +265,8 @@ body.dark { background: var(--bg); }
   .mobile-page-hidden { display: none !important; }
   .sidebar { width: 100% !important; height: 100dvh; max-height: 100dvh; overflow-y: auto; }
   main { width: 100% !important; height: 100dvh; display: flex; flex-direction: column; }
-  .viewer { padding: 16px 16px 32px !important; }
-  /* 大纲抽屉 */
-  .outline-fab { display: flex; position: fixed; bottom: 24px; left: 16px; z-index: 100; width: 40px; height: 40px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--border); color: var(--text2); cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-  .outline-drawer-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; }
-  .outline-drawer { position: fixed; top: 0; left: 0; height: 100dvh; width: 72%; max-width: 280px; background: var(--bg2); z-index: 201; transform: translateX(-100%); transition: transform .25s ease; overflow-y: auto; display: flex; flex-direction: column; }
-  .outline-drawer.open { transform: translateX(0); }
+  .viewer { padding: 16px 16px 32px !important; position: relative; }
+  .outline-drawer { width: 72%; max-width: 280px; }
   .outline-drawer-title { padding: 16px 20px; font-size: 13px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .outline-drawer-item { padding: 12px 20px; font-size: 15px; color: var(--text2); cursor: pointer; border-bottom: 1px solid var(--border); }
   .outline-drawer-item.lv1 { font-weight: 600; color: var(--text); }

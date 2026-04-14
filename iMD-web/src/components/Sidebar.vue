@@ -14,22 +14,8 @@
     </div>
 
     <div v-if="!collapsed" class="sidebar-middle">
-      <!-- 大纲次页（桌面端） -->
-      <div v-if="sideView === 'outline'" class="outline-page">
-        <div class="outline-page-header" @click="sideView = 'tree'; localStorage.setItem('imk_side_view', 'tree')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          <input v-if="renaming === activeDoc?.id" ref="renameRef" v-model="renameVal" class="rename-input"
-            @keyup.enter="confirmRename(activeDoc)" @keyup.esc="renaming=null" @blur="confirmRename(activeDoc)" @click.stop />
-          <span v-else @dblclick.stop="startRename(activeDoc)">{{ activeDoc?.title }}</span>
-        </div>
-        <div class="outline-page-list">
-          <div v-for="h in headings" :key="h.id" :class="['outline-page-item', `lv${h.level}`]" @click="$emit('jump', h.id)">{{ h.text }}</div>
-          <div v-if="!headings.length" class="outline-empty">无大纲</div>
-        </div>
-      </div>
-
       <!-- 文件树 -->
-      <div v-else class="tree" ref="treeRef">
+      <div class="tree" ref="treeRef">
         <div v-if="newGroupInput" class="inline-input-row">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
           <input ref="groupInputRef" v-model="newGroupName" placeholder="文件夹名称"
@@ -161,47 +147,11 @@ import { api } from '../api.js'
 const props = defineProps({ docs: Array, active: Number, collapsed: Boolean, outlineTree: { type: Array, default: () => [] }, headings: { type: Array, default: () => [] } })
 const emit = defineEmits(['select', 'toggle', 'logout', 'update:docs', 'new-doc', 'jump', 'import', 'export'])
 
-// 暴露给 Layout 的返回处理：outline 视图时先退回 tree，返回 true 表示已处理
-function handleBack() {
-  if (sideView.value === 'outline') {
-    sideView.value = 'tree'
-    localStorage.setItem('imk_side_view', 'tree')
-    return true
-  }
-  return false
-}
-defineExpose({ handleBack })
-
 const sortedDocs = computed(() => props.docs.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)))
 
 const openGroups = ref(new Set(props.docs.map(g => g.id)))
 const openDocOutlines = ref(new Set())
-const sideView = ref(localStorage.getItem('imk_side_view') || 'tree')
-const activeDoc = ref(null)
 const sidebarRef = ref(null)
-
-// 恢复 activeDoc（刷新后 docs 加载完且 active 有值时）
-watch(() => [props.active, props.docs], ([id]) => {
-  if (!id || !props.docs.length) return
-  for (const g of props.docs) {
-    const doc = g.children?.find(d => d.id === id)
-    if (doc) { activeDoc.value = doc; break }
-  }
-}, { immediate: true })
-
-const headings = computed(() => {
-  if (!activeDoc.value) return []
-  let content = activeDoc.value.content
-  for (const g of props.docs) {
-    const d = g.children?.find(d => d.id === activeDoc.value.id)
-    if (d) { content = d.content; break }
-  }
-  if (!content) return []
-  return [...content.matchAll(/^(#{1,3})\s+(.+)$/gm)].map(m => ({
-    level: m[1].length, text: m[2].trim(),
-    id: m[2].trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
-  }))
-})
 
 function toggleGroup(id) {
   openGroups.value.has(id) ? openGroups.value.delete(id) : openGroups.value.add(id)
