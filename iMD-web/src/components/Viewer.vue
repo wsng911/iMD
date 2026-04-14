@@ -22,7 +22,7 @@
         <!-- 抽屉从右侧向左弹出 -->
         <div class="outline-drawer" :class="{ open: drawerOpen }">
           <div class="outline-drawer-title">Tree</div>
-          <div v-for="h in headings" :key="h.id" :class="['outline-drawer-item', `lv${h.level}`]" @click="jumpTo(h); if(window.innerWidth <= 768) drawerOpen = false">{{ h.text }}</div>
+          <div v-for="h in headings" :key="h.id" :class="['outline-drawer-item', `lv${h.level}`]" @click="jumpTo(h); if(isMobile) drawerOpen = false">{{ h.text }}</div>
         </div>
         <div class="outline-drawer-mask" v-if="drawerOpen" @click="drawerOpen = false" />
       </template>
@@ -41,6 +41,7 @@ defineEmits(['edit', 'back'])
 
 const mdWrap = ref(null)
 const drawerOpen = ref(false)
+const isMobile = window.innerWidth <= 768
 
 const headings = computed(() => {
   if (!props.content) return []

@@ -81,9 +81,9 @@ function onSelect(doc) {
 }
 
 async function onSave(content) {
+  await api.updateDoc(current.value.id, { content }).catch(() => {})
   current.value.content = content
   mode.value = 'view'
-  await api.updateDoc(current.value.id, { content }).catch(() => {})
 }
 function logout() { localStorage.removeItem('imk_token'); router.push('/login') }
 async function importMd() {
@@ -98,7 +98,7 @@ async function importMd() {
 }
 async function exportMd() {
   const zip = new JSZip()
-  docs.value.forEach(g => { const f = zip.folder(g.title); g.children?.forEach(d => f.file(`${d.title}.md`, d.content || '')) })
+  docs.value.forEach(g => { const f = zip.folder(g.title); g.children?.forEach(d => f.file(`${d.title}.md`, d.content ?? '')) })
   const blob = await zip.generateAsync({ type: 'blob' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)

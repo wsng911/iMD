@@ -25,7 +25,7 @@ const props = defineProps({ content: String })
 const emit = defineEmits(['save', 'cancel', 'update:content'])
 
 const content = ref(props.content || '')
-watch(() => props.content, v => { content.value = v || '' })
+watch(() => props.content, v => { if (v !== content.value) content.value = v || '' })
 watch(content, v => emit('update:content', v))
 
 const toolbars = [
