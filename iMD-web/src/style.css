@@ -110,7 +110,7 @@ body.dark { background: var(--bg); }
 .toggle-btn:hover { color: var(--text); background: var(--bg3); }
 .mobile-menu-btn { display: none; position: fixed; top: 10px; left: 10px; z-index: 400; background: var(--bg2); border: none; border-radius: 8px; padding: 8px; cursor: pointer; color: var(--text3); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 .tree { padding: 8px 0; overflow-y: auto; min-height: 0; flex: 1; }
-.group-title { display: flex; align-items: center; gap: 6px; padding: 0 16px 0 8px; margin: 1px 0; border-radius: 24px; font-size: 14px; font-weight: 600; color: var(--text2); cursor: pointer; user-select: none; flex-wrap: nowrap; overflow: hidden; background: var(--bg3); height: 20px; min-height: 20px; }
+.group-title { display: flex; align-items: center; gap: 6px; padding: 0 16px 0 8px; margin: 1px 0; border-radius: 24px; font-size: 14px; font-weight: 600; color: var(--text2); cursor: pointer; user-select: none; flex-wrap: nowrap; overflow: hidden; background: var(--bg3); height: 40px; min-height: 40px; margin: 1px 10px; }
 .group-title:hover { background: var(--bg4); }
 .group-title .fold-icon { flex-shrink: 0; }
 .group-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; flex-shrink: 0; }
@@ -118,7 +118,7 @@ body.dark { background: var(--bg); }
 .group-actions .icon-btn svg { width: 11px !important; height: 11px !important; }
 .group-actions .del-btn { width: 17px !important; height: 17px !important; padding: 2px !important; }
 .group-actions .del-btn svg { width: 11px !important; height: 11px !important; }
-.item { display: flex; align-items: center; gap: 6px; padding: 8px 16px 8px 36px; margin: 2px 8px; border-radius: 0 24px 24px 0; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
+.item { display: flex; align-items: center; gap: 6px; padding: 4px 16px 4px 36px; margin: 1px 8px; border-radius: 0 24px 24px 0; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
 /* Tree 连接线 */
 .group-items { position: relative; padding-left: 0; }
 .group-items::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 1px; background: var(--border); }
@@ -194,8 +194,8 @@ body.dark { background: var(--bg); }
 .footer-label { font-size: calc(var(--font-size) - 3px); color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
 .footer-info { font-size: calc(var(--font-size) - 2px); color: var(--text2); text-align: right; }
 .footer-actions { display: flex; align-items: center; gap: 4px; padding-top: 6px; }
-.footer-icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; }
-.footer-icon-btn svg { width: 22px; height: 22px; }
+.footer-icon-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; }
+.footer-icon-btn svg { width: 18px; height: 18px; }
 .footer-icon-btn:hover { background: var(--bg3); color: var(--text); }
 .version-tag { font-size: 16px; color: var(--text3); margin: 0 4px; }
 .logout-btn { display: flex; align-items: center; justify-content: flex-end; gap: 6px; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 4px 0; margin-top: 2px; width: 100%; margin-left: auto; }
