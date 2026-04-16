@@ -38,14 +38,13 @@
               <div :class="['item', { active: active === doc.id, selected: selectedId === doc.id }]" :data-id="doc.id"
                 @click="onDocClick(doc)" @dblclick.stop="onDocDblClick(doc)">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <button class="item-act-btn item-del-btn" title="删除" @click.stop="deleteItem(doc.id)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                </button>
                 <input v-if="renaming === doc.id" ref="renameRef" v-model="renameVal" class="rename-input"
                   @keyup.enter="confirmRename(doc)" @keyup.esc="renaming=null" @blur="confirmRename(doc)" @click.stop />
                 <span v-else class="item-title">{{ doc.title }}</span>
                 <div class="item-actions">
-                  <button class="item-act-btn" title="删除" @click.stop="deleteItem(doc.id)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                  </button>
-                  <span class="item-act-gap"></span>
                   <button class="item-act-btn" title="上移" @click.stop="moveDoc(group.id, doc.id, -1)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
                   </button>
