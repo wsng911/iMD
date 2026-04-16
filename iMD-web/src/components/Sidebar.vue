@@ -46,9 +46,12 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
                   </button>
                   <span class="item-act-gap"></span>
-                  <span class="item-act-btn drag-handle" title="排序">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
-                  </span>
+                  <button class="item-act-btn" title="上移" @click.stop="moveDoc(group.id, doc.id, -1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+                  </button>
+                  <button class="item-act-btn" title="下移" @click.stop="moveDoc(group.id, doc.id, 1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
                 </div>
               </div>
             </template>
@@ -218,6 +221,16 @@ function deleteItem(id) {
   let docs = props.docs.filter(g => g.id !== id)
   docs = docs.map(g => ({ ...g, children: g.children.filter(d => d.id !== id) }))
   emit('update:docs', docs); selectedId.value = null
+}
+function moveDoc(groupId, docId, dir) {
+  const group = props.docs.find(g => g.id === groupId)
+  if (!group) return
+  const children = [...group.children]
+  const idx = children.findIndex(d => d.id === docId)
+  const newIdx = idx + dir
+  if (newIdx < 0 || newIdx >= children.length) return
+  ;[children[idx], children[newIdx]] = [children[newIdx], children[idx]]
+  emit('update:docs', props.docs.map(g => g.id === groupId ? { ...g, children } : g))
 }
 
 const newGroupInput = ref(false)
