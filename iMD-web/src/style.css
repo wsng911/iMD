@@ -92,7 +92,7 @@ body.dark { background: var(--bg); }
 .empty { color: var(--text3); padding: 48px; }
 
 /* ── DocList 中栏 ── */
-.doclist { background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; width: 18%; flex-shrink: 0; overflow: hidden; }
+.doclist { background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; width: 220px; flex-shrink: 0; overflow: hidden; }
 .doclist-header { display: flex; align-items: center; gap: 8px; padding: 14px 12px; min-height: 48px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .doclist-title { font-size: 13px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
 .doclist-body { flex: 1; overflow-y: auto; padding: 8px 0; }
@@ -101,14 +101,11 @@ body.dark { background: var(--bg); }
 .doclist-item:hover { background: var(--bg3); color: var(--text); }
 .doclist-item.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
 
-/* ── Sidebar ── */
-.sidebar { background: var(--bg2); box-shadow: var(--shadow); display: flex; flex-direction: column; transition: width .2s; width: 18%; overflow: hidden; flex-shrink: 0; position: relative; z-index: 10; }
+/* ── Sidebar 左侧抽屉 ── */
+.sidebar-drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100dvh; z-index: 300; background: var(--bg2); box-shadow: var(--shadow); display: flex; flex-direction: column; transition: left .25s ease; overflow: hidden; }
+.sidebar-drawer.open { left: 0; }
+.sidebar-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 299; }
 .sidebar-middle { overflow-y: auto; overflow-x: hidden; flex-shrink: 0; }
-.sidebar-bottom { flex-shrink: 0; display: flex; flex-direction: column; overflow: hidden; }
-.sidebar.collapsed { width: 0; border-right: none; overflow: visible; }
-.sidebar.collapsed .sidebar-footer { position: fixed; bottom: 0; left: 0; background: var(--bg2); border-right: 1px solid var(--border); border-top: 1px solid var(--border); border-radius: 0 8px 0 0; }
-.sidebar.collapsed .footer-row,
-.sidebar.collapsed .settings-panel { display: none; }
 .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px; min-height: 48px; }
 .header-actions { display: flex; gap: 4px; margin-left: auto; margin-right: 6px; }
 .header-actions .icon-btn { width: 28px; height: 28px; }
@@ -295,7 +292,7 @@ body.dark { background: var(--bg); }
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .layout { display: block; }
   .mobile-page-hidden { display: none !important; }
-  .sidebar { width: 100% !important; height: 100dvh; max-height: 100dvh; overflow-y: auto; }
+  .sidebar-drawer { width: 80vw; max-width: 300px; }
   .doclist { width: 100% !important; height: 100dvh; }
   main { width: 100% !important; height: 100dvh; display: flex; flex-direction: column; }
   .viewer-scroll { padding: 16px 16px 32px !important; }

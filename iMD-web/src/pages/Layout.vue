@@ -1,8 +1,10 @@
 <template>
   <div class="layout">
+    <!-- 左栏抽屉遮罩 -->
+    <div v-if="sidebarOpen" class="sidebar-mask" @click="sidebarOpen = false" />
     <Sidebar
-      :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed"
-      :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
+      :docs="docs" :active="current?.id"
+      :class="['sidebar-drawer', { open: sidebarOpen }, { 'mobile-page-hidden': mobilePage === 'main' }]"
       @select="onSelect"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
@@ -10,8 +12,8 @@
     />
     <DocList
       :docs="docs" :active="current?.id"
-      :class="{ 'mobile-page-hidden': mobilePage !== 'doclist' }"
-      @select="onSelect" @toggle="onToggle" @back="navTo('sidebar')"
+      :class="{ 'mobile-page-hidden': mobilePage === 'main' }"
+      @select="onSelect" @toggle="sidebarOpen = !sidebarOpen"
     />
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <template v-if="current">
@@ -38,19 +40,18 @@ const router = useRouter()
 const docs = ref([])
 const current = ref(null)
 const mode = ref('view')
-const sidebarCollapsed = ref(false)
+const sidebarOpen = ref(false)
 const mobilePage = ref('doclist')
 
-// ─── 手机端导航（三页）────────────────────────────────────
+// ─── 手机端导航 ───────────────────────────────────────────
 function navTo(page) {
   history.pushState({ page }, '')
   mobilePage.value = page
   localStorage.setItem('imk_mobile_page', page)
 }
-
 function onPopState(e) {
   const page = e.state?.page
-  if (page === 'sidebar' || page === 'doclist' || page === 'main') {
+  if (page === 'doclist' || page === 'main') {
     mobilePage.value = page
     localStorage.setItem('imk_mobile_page', page)
   } else {
@@ -80,7 +81,6 @@ onMounted(async () => {
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
 // ─── 文档交互 ─────────────────────────────────────────────
-function onToggle() { sidebarCollapsed.value = !sidebarCollapsed.value }
 function onSelect(doc) {
   current.value = doc
   mode.value = 'view'
