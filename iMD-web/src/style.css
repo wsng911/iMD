@@ -129,7 +129,7 @@ body.dark { background: var(--bg); }
 .group-actions .icon-btn svg { width: 13px !important; height: 13px !important; }
 .group-actions .del-btn { width: 17px !important; height: 17px !important; padding: 2px !important; }
 .group-actions .del-btn svg { width: 13px !important; height: 13px !important; }
-.item { display: flex; align-items: center; gap: 6px; padding: 4px 16px 4px 36px; margin: 1px 8px; border-radius: 0 24px 24px 0; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
+.item { display: flex; align-items: center; gap: 6px; padding: 6px 16px 6px 36px; margin: 1px 8px; border-radius: 4px; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
 /* Tree 连接线 */
 .group-items { position: relative; padding-left: 0; }
 .group-items::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 1px; background: var(--border); }
@@ -138,6 +138,11 @@ body.dark { background: var(--bg); }
 .item.active { background: var(--accent-bg, var(--bg3)); color: var(--accent); font-weight: 600; }
 .item.selected { background: var(--bg3); }
 .group-title.selected { background: var(--accent-bg); color: var(--accent); }
+
+.doc-actions { display: flex; gap: 4px; padding: 2px 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; position: absolute; top: -28px; left: 36px; z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.doc-actions button { background: none; border: none; color: var(--text3); cursor: pointer; padding: 2px; border-radius: 4px; display: flex; align-items: center; }
+.doc-actions button:hover { color: var(--text); background: var(--bg3); }
+.doc-actions svg { width: 13px; height: 13px; }
 .item .item-del { opacity: 0; transition: opacity .15s; }
 .item:hover .item-del { opacity: 1; }
 .doc-outline-item { padding: 5px 16px 5px 48px; font-size: 12px; color: var(--text3); cursor: pointer; display: flex; align-items: center; gap: 6px; border-radius: 0 24px 24px 0; margin: 1px 8px; }
@@ -291,7 +296,7 @@ body.dark { background: var(--bg); }
 /* 移动端优化 */
 @media (max-width: 768px) {
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  .layout { display: block; }
+  .layout { display: block; overflow: hidden; }
   .mobile-page-hidden { display: none !important; }
   .sidebar-drawer { width: 220px; left: -220px; }
   .doclist { width: 100% !important; height: 100dvh; }
