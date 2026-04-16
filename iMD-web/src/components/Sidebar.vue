@@ -17,8 +17,7 @@
           <input ref="groupInputRef" v-model="newGroupName" placeholder="文件夹名称"
             @keyup.enter="confirmNewGroup" @keyup.esc="newGroupInput=false" @blur="confirmNewGroup" />
         </div>
-        <div v-for="group in sortedDocs" :key="group.id" class="group" :data-id="group.id"
-          draggable="true" @dragstart="e => e.dataTransfer.setData('groupId', group.id)">
+        <div v-for="group in sortedDocs" :key="group.id" class="group" :data-id="group.id">
           <div :class="['group-title', { selected: selectedId === group.id }]" @click="selectItem(group.id); toggleGroup(group.id)">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
             <input v-if="renaming === group.id" ref="renameRef" v-model="renameVal" class="rename-input"
