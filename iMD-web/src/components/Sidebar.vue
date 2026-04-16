@@ -170,6 +170,7 @@ let groupSortable = null
 onMounted(() => {
   groupSortable = Sortable.create(treeRef.value, {
     animation: 150, handle: '.group-title',
+    setData(dataTransfer) { dataTransfer.setData('text/plain', '') },
     onEnd(e) {
       const list = [...sortedDocs.value]
       const [moved] = list.splice(e.oldIndex, 1)
@@ -186,6 +187,7 @@ function setItemsRef(el, groupId) {
   if (itemsSortables[groupId]) { itemsSortables[groupId].destroy(); delete itemsSortables[groupId] }
   itemsSortables[groupId] = Sortable.create(el, {
     animation: 150, filter: '.doc-outline-item', draggable: '.item',
+    setData(dataTransfer) { dataTransfer.setData('text/plain', '') },
     onEnd(e) {
       const group = props.docs.find(g => g.id === groupId)
       if (!group) return
