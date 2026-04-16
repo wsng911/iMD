@@ -3,14 +3,19 @@
     <Sidebar
       :docs="docs" :active="current?.id" :collapsed="sidebarCollapsed"
       :class="{ 'mobile-page-hidden': mobilePage !== 'sidebar' }"
-      @select="onSelect" @toggle="onToggle"
+      @select="onSelect"
       @update:docs="d => { docs = d; api.saveDocs(d).catch(()=>{}) }" @logout="logout"
       @new-doc="doc => { current = doc; mode = 'edit' }"
       @import="importMd" @export="exportMd"
     />
+    <DocList
+      :docs="docs" :active="current?.id"
+      :class="{ 'mobile-page-hidden': mobilePage !== 'doclist' }"
+      @select="onSelect" @toggle="onToggle" @back="navTo('sidebar')"
+    />
     <main class="main" :class="{ 'mobile-page-hidden': mobilePage !== 'main' }">
       <template v-if="current">
-        <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" :mobilePage="mobilePage" @edit="mode = 'edit'" @back="navTo('sidebar')" />
+        <Viewer v-if="mode === 'view'" :content="current.content" :title="current.title" :mobilePage="mobilePage" @edit="mode = 'edit'" @back="navTo('doclist')" />
         <Editor v-else :content="current.content" @save="onSave" @cancel="mode = 'view'" @update:content="v => current.content = v" />
       </template>
       <div v-else class="empty">← 选择文档</div>
@@ -23,6 +28,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import JSZip from 'jszip'
 import { useRouter } from 'vue-router'
 import Sidebar from '../components/Sidebar.vue'
+import DocList from '../components/DocList.vue'
 import Viewer from '../components/Viewer.vue'
 import Editor from '../components/Editor.vue'
 import { loadSettings } from '../useSettings.js'
@@ -33,9 +39,9 @@ const docs = ref([])
 const current = ref(null)
 const mode = ref('view')
 const sidebarCollapsed = ref(false)
-const mobilePage = ref('sidebar')
+const mobilePage = ref('doclist')
 
-// ─── 手机端导航（两页）────────────────────────────────────
+// ─── 手机端导航（三页）────────────────────────────────────
 function navTo(page) {
   history.pushState({ page }, '')
   mobilePage.value = page
@@ -44,7 +50,7 @@ function navTo(page) {
 
 function onPopState(e) {
   const page = e.state?.page
-  if (page === 'sidebar' || page === 'main') {
+  if (page === 'sidebar' || page === 'doclist' || page === 'main') {
     mobilePage.value = page
     localStorage.setItem('imk_mobile_page', page)
   } else {
@@ -54,7 +60,7 @@ function onPopState(e) {
 
 // ─── 生命周期 ─────────────────────────────────────────────
 onMounted(async () => {
-  history.replaceState({ page: 'sidebar' }, '')
+  history.replaceState({ page: 'doclist' }, '')
   window.addEventListener('popstate', onPopState)
   loadSettings()
   docs.value = await api.getDocs()
@@ -65,15 +71,16 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
-  if (window.innerWidth <= 768 && current.value) {
+  if (window.innerWidth <= 768) {
     const saved = localStorage.getItem('imk_mobile_page')
-    if (saved === 'main') mobilePage.value = 'main'
+    if (saved === 'main' && current.value) mobilePage.value = 'main'
+    else mobilePage.value = 'doclist'
   }
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
 // ─── 文档交互 ─────────────────────────────────────────────
-function onToggle() { if (window.innerWidth > 768) sidebarCollapsed.value = !sidebarCollapsed.value }
+function onToggle() { sidebarCollapsed.value = !sidebarCollapsed.value }
 function onSelect(doc) {
   current.value = doc
   mode.value = 'view'

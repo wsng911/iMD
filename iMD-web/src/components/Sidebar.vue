@@ -1,19 +1,14 @@
 <template>
   <aside :class="['sidebar', { collapsed }]" ref="sidebarRef">
     <div class="sidebar-header">
-      <button class="toggle-btn" @click="$emit('toggle')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </button>
-      <div class="header-actions" v-if="!collapsed">
+      <div class="header-actions">
         <button class="icon-btn" title="新建文件夹" @click="newGroup">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
         </button>
       </div>
     </div>
 
-    <div v-if="!collapsed" class="sidebar-middle">
+    <div class="sidebar-middle">
       <!-- 文件树 -->
       <div class="tree" ref="treeRef">
         <div v-if="newGroupInput" class="inline-input-row">
@@ -123,7 +118,7 @@
         <button class="footer-icon-btn" @click="$emit('export')" title="导出">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <span class="version-tag">v2.2</span>
+        <span class="version-tag">v2.3</span>
         <button class="logout-btn" @click="$emit('logout')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           退出
