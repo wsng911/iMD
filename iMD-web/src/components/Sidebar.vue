@@ -37,19 +37,19 @@
             <template v-for="doc in group.children" :key="doc.id">
               <div :class="['item', { active: active === doc.id, selected: selectedId === doc.id }]" :data-id="doc.id"
                 @click="onDocClick(doc)" @dblclick.stop="onDocDblClick(doc)">
-                <!-- 选中时上方操作栏 -->
-                <div v-if="selectedId === doc.id" class="doc-actions">
-                  <button title="重命名" @click.stop="startRename(doc)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button title="删除" @click.stop="deleteItem(doc.id)" style="color:#f38ba8">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                  </button>
-                </div>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <input v-if="renaming === doc.id" ref="renameRef" v-model="renameVal" class="rename-input"
                   @keyup.enter="confirmRename(doc)" @keyup.esc="renaming=null" @blur="confirmRename(doc)" @click.stop />
-                <span v-else>{{ doc.title }}</span>
+                <span v-else class="item-title">{{ doc.title }}</span>
+                <div class="item-actions">
+                  <button class="item-act-btn" title="删除" @click.stop="deleteItem(doc.id)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  </button>
+                  <span class="item-act-gap"></span>
+                  <span class="item-act-btn drag-handle" title="排序">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+                  </span>
+                </div>
               </div>
             </template>
             <div v-if="newDocInput === group.id" class="inline-input-row sub">
@@ -186,7 +186,7 @@ function setItemsRef(el, groupId) {
   if (!el) return
   if (itemsSortables[groupId]) { itemsSortables[groupId].destroy(); delete itemsSortables[groupId] }
   itemsSortables[groupId] = Sortable.create(el, {
-    animation: 150, filter: '.doc-outline-item', draggable: '.item',
+    animation: 150, filter: '.doc-outline-item', draggable: '.item', handle: '.drag-handle',
     setData(dataTransfer) { dataTransfer.setData('text/plain', '') },
     onEnd(e) {
       const group = props.docs.find(g => g.id === groupId)
