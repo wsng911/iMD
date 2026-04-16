@@ -130,7 +130,7 @@ body.dark { background: var(--bg); }
 .group-actions .icon-btn svg { width: 13px !important; height: 13px !important; }
 .group-actions .del-btn { width: 17px !important; height: 17px !important; padding: 2px !important; }
 .group-actions .del-btn svg { width: 13px !important; height: 13px !important; }
-.item { display: flex; align-items: center; gap: 6px; padding: 6px 16px 6px 36px; margin: 1px 8px; border-radius: 4px; font-size: 13px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: visible; position: relative; }
+.item { display: flex; align-items: center; gap: 6px; padding: 6px 16px 6px 36px; margin: 1px 8px; border-radius: 4px; font-size: 10px; color: var(--text2); cursor: pointer; white-space: nowrap; overflow: visible; position: relative; }
 /* Tree 连接线 */
 .group-items { position: relative; padding-left: 0; }
 .group-items::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 1px; background: var(--border); }
