@@ -72,11 +72,9 @@ onMounted(async () => {
       if (doc) { current.value = doc; break }
     }
   }
-  if (window.innerWidth <= 768) {
-    const saved = localStorage.getItem('imk_mobile_page')
-    if (saved === 'main' && current.value) mobilePage.value = 'main'
-    else mobilePage.value = 'doclist'
-  }
+  const saved = localStorage.getItem('imk_mobile_page')
+  if (saved === 'main' && current.value) mobilePage.value = 'main'
+  else mobilePage.value = 'doclist'
 })
 onUnmounted(() => window.removeEventListener('popstate', onPopState))
 
@@ -85,7 +83,7 @@ function onSelect(doc) {
   current.value = doc
   mode.value = 'view'
   localStorage.setItem('imk_last_doc', doc.id)
-  if (window.innerWidth <= 768) navTo('main')
+  navTo('main')
 }
 
 async function onSave(content) {

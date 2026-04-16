@@ -152,8 +152,7 @@ function onDocClick(doc) {
   clickTimer = setTimeout(() => {
     clickTimer = null
     selectItem(doc.id)
-    emit('select', doc)
-  }, window.innerWidth <= 768 ? 0 : 220)
+  }, 220)
 }
 function onDocDblClick(doc) {
   clearTimeout(clickTimer); clickTimer = null
